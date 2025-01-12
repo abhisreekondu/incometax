@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
-const Salarydeductions = () => {
+const Salarydeductions = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
     pensiontype: "",
     pfamt: 0,
@@ -21,17 +21,21 @@ const Salarydeductions = () => {
     ewf: 0,
     swf: 0,
     otherdeductions: 0,
+    ...DataTransfer,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData); // Notify parent of the change immediately
   };
+
 
   return (
     <div className="container border p-4 rounded">
       {/* Outer container with Bootstrap styles */}
-      <h4 className="text-center bg-primary text-white mb-4">Salary Deductions (Monthly)</h4>
+      <h4 className="text-center bg-primary text-white mb-4 p-2">Salary Deductions (Monthly)</h4>
       <div className="row g-3">
         {/* Pension Type Selection */}
         <div className="col-12 col-sm-6 col-md-4">
@@ -76,7 +80,7 @@ const Salarydeductions = () => {
             {formData.pfchange === "Yes" && (
               <>
                 {/* Instruction Text */}
-                <p className="p-0 m-0 b-0 text-primary">
+                <p className="p-0 m-0 b-0 text-primary ">
                   *Enter the Month and Amount from which PF is changed*
                 </p>
 

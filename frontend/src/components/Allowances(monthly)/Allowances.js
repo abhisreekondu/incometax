@@ -1,30 +1,34 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
-const Allowances = () => {
+const Allowances = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
     hra: 10,
     hrachange: "",
     hraper: "",
     hramon: "",
     pha: 0,
-    cca: 0,
+    hwa:0,
     hma: 0,
     hmachange: "",
     hmamon: "",
     hmaamt: "",
     otherallowance: 0,
     ppsp: 0,
+    ...data,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData); // Notify parent of the change immediately
   };
+
   return (
     <div className="container border p-4 rounded">
-      <h4 className="text-center bg-primary text-white mb-4">Allowances (Monthly)</h4>
+      <h4 className="text-center bg-primary text-white mb-4 p-2">Allowances (Monthly)</h4>
       <div className="row g-3">
         <div className="col-12 col-sm-6 col-md-4">
           <BasicSelect
@@ -79,8 +83,8 @@ const Allowances = () => {
                   "Oct-24",
                   "Nov-24",
                   "Dec-24",
-                  "Jan-24",
-                  "Feb-24",
+                  "Jan-25",
+                  "Feb-25",
                 ]}
                 onChange={handleChange}
               />
@@ -115,7 +119,7 @@ const Allowances = () => {
           />
         </div>
 
-        {formData.hrachange === "Yes" && (
+        {formData.hmachange === "Yes" && (
           <>
             {/* Day Dropdown */}
             <p className="p-0 m-0 b-0 text-primary">
@@ -139,8 +143,8 @@ const Allowances = () => {
                   "Oct-24",
                   "Nov-24",
                   "Dec-24",
-                  "Jan-24",
-                  "Feb-24",
+                  "Jan-25",
+                  "Feb-25",
                 ]}
                 onChange={handleChange}
               />

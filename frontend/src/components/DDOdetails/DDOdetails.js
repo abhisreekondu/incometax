@@ -1,23 +1,27 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import BasicTextField from "../BasicTextField";
 
-const DDOdetails = () => {
+const DDOdetails = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
     ddoname: "",
     ddodesg: "",
     ddooffice: "",
     ddotanno: "",
+    ...data,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData); // Notify parent of the change immediately
   };
+
   return (
     <div className="container border p-4 rounded">
       {/* Outer container with Bootstrap styles */}
-      <h4 className="text-center bg-primary text-white mb-4">DDO Details</h4>
+      <h4 className="text-center  bg-primary  text-white mb-4 p-2">DDO Details</h4>
       <div className="row g-3">
         <div className="col-12 col-sm-6 col-md-4">
           <BasicTextField

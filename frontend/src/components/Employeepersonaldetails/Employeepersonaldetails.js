@@ -2,30 +2,33 @@ import React, { useState } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
-const EmployeePersonalDetails = () => {
+const EmployeePersonalDetails = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
-    employeeName: "",
-    designation: "",
-    employeeId: "",
-    workingPlace: "",
-    panNumber: "",
-    mandalDistrict: "",
-    age: "",
+    employeeName: data.employeeName || "",
+    designation: data.designation || "",
+    employeeId: data.employeeId || "",
+    workingPlace: data.workingPlace || "",
+    panNumber: data.panNumber || "",
+    mandalDistrict: data.mandalDistrict || "",
+    age: data.age || "",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData); // Notify parent of the change immediately
   };
 
   return (
-    <div className="container border p-4 rounded">
-      {/* Outer container with Bootstrap styles */}
-      <h4 className="text-center bg-primary text-white mb-4">Employee Personal Details</h4>
+    <div className="container mt-4">
+      <h4 className="text-center bg-primary text-white py-2 rounded">
+        Employee Personal Details
+      </h4>
 
-      <div className="row g-3">
+      <div className="row gy-3">
         {/* Name of the Employee */}
-        <div className="col-12 col-sm-6 col-md-4">
+        <div className="col-md-4">
           <BasicTextField
             label="Name of the Employee"
             name="employeeName"
@@ -35,7 +38,7 @@ const EmployeePersonalDetails = () => {
         </div>
 
         {/* Designation */}
-        <div className="col-12 col-sm-6 col-md-4">
+        <div className="col-md-4">
           <BasicTextField
             label="Designation"
             name="designation"
@@ -45,7 +48,7 @@ const EmployeePersonalDetails = () => {
         </div>
 
         {/* Employee ID */}
-        <div className="col-12 col-sm-6 col-md-4">
+        <div className="col-md-4">
           <BasicTextField
             label="Employee ID"
             name="employeeId"
@@ -56,7 +59,7 @@ const EmployeePersonalDetails = () => {
         </div>
 
         {/* Working Place */}
-        <div className="col-12 col-sm-6 col-md-4">
+        <div className="col-md-4">
           <BasicTextField
             label="Working Place"
             name="workingPlace"
@@ -67,7 +70,7 @@ const EmployeePersonalDetails = () => {
         </div>
 
         {/* Employee PAN No */}
-        <div className="col-12 col-sm-6 col-md-4">
+        <div className="col-md-4">
           <BasicTextField
             label="Employee PAN No"
             name="panNumber"
@@ -78,7 +81,7 @@ const EmployeePersonalDetails = () => {
         </div>
 
         {/* Mandal & District */}
-        <div className="col-12 col-sm-6 col-md-4">
+        <div className="col-md-4">
           <BasicTextField
             label="Mandal & District"
             name="mandalDistrict"
@@ -89,7 +92,7 @@ const EmployeePersonalDetails = () => {
         </div>
 
         {/* Age Select */}
-        <div className="col-12 col-sm-6 col-md-4">
+        <div className="col-md-4">
           <BasicSelect
             label="Your Age"
             name="age"

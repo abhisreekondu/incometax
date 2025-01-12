@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
-const Employeepayparticulars = () => {
+const Employeepayparticulars = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
     basicpay: "",
     incrementmonth: "",
@@ -18,16 +18,21 @@ const Employeepayparticulars = () => {
     incomefromothersources: 0,
     twochildrenfee: 0,
     housetype: "",
+    ...data,
   });
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData); // Notify parent of the change immediately
   };
+
   return (
     <div className="container border p-4 rounded">
       {/* Outer container with Bootstrap styles */}
-      <h4 className="text-center bg-primary text-white mb-4">Employee Pay Particulars</h4>
+      <h4 className="text-center  bg-primary  text-white mb-4 p-2">Employee Pay Particulars</h4>
       <div className="row g-3">
         {/* Promotion */}
         <div className="col-12 col-sm-6 col-md-4">
@@ -68,8 +73,8 @@ const Employeepayparticulars = () => {
               "Oct-24",
               "Nov-24",
               "Dec-24",
-              "Jan-24",
-              "Feb-24",
+              "Jan-25",
+              "Feb-25",
             ]}
             onChange={handleChange}
           />
@@ -121,8 +126,8 @@ const Employeepayparticulars = () => {
                   "Oct-24",
                   "Nov-24",
                   "Dec-24",
-                  "Jan-24",
-                  "Feb-24",
+                  "Jan-25",
+                  "Feb-25",
                 ]}
                 onChange={handleChange}
               />
@@ -175,8 +180,8 @@ const Employeepayparticulars = () => {
                   "Oct-24",
                   "Nov-24",
                   "Dec-24",
-                  "Jan-24",
-                  "Feb-24",
+                  "Jan-25",
+                  "Feb-25",
                 ]}
                 onChange={handleChange}
               />
@@ -216,8 +221,8 @@ const Employeepayparticulars = () => {
                   "Oct-24",
                   "Nov-24",
                   "Dec-24",
-                  "Jan-24",
-                  "Feb-24",
+                  "Jan-25",
+                  "Feb-25",
                 ]}
                 onChange={handleChange}
               />

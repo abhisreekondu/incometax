@@ -1,21 +1,25 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import BasicTextField from "../BasicTextField";
 
-const Anyotherarrears = () => {
+const Anyotherarrears = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
     arrearpay: 0,
     arrearda: 0,
     arrearhra: 0,
+    ...DataTransfer,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData); // Notify parent of the change immediately
   };
+
   return (
-    <div className="container border p-4 rounded">
-      <h4 className="text-center bg-primary text-white mb-4">Any Other Arrears</h4>
+    <div className="container border p-4 rounded  bg-gradient-dark ">
+      <h4 className="text-center  bg-primary  text-white mb-4 p-2">Any Other Arrears</h4>
       <div className="row g-3">
         <div className="col-12 col-sm-6 col-md-4">
           <BasicTextField

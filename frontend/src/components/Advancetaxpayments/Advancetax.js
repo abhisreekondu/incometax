@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
-const Adavancetax = () => {
+const Adavancetax = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
    mar:0,
    apr:0,
@@ -16,16 +16,19 @@ const Adavancetax = () => {
    dec:0,
    jan:0,
    feb:0,
+   ...data,
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData); 
   };
   return (
     <div className="container border p-4 rounded">
       {/* Outer container with Bootstrap styles */}
-      <h4 className="text-center bg-primary text-white mb-4 ">Adavance Tax Payments</h4>
+      <h4 className="text-center  bg-primary  text-white mb-4 p-2">Adavance Tax Payments</h4>
       <div className="row g-3">
       <div className="col-12 col-sm-6 col-md-4">
           <BasicTextField

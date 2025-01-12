@@ -18,7 +18,7 @@ const Houseadd = () => {
   return (
     <div className="container border p-4 rounded">
       {/* Outer container with Bootstrap styles */}
-      <h4 className="text-center bg-primary text-white mb-4">House Rent Slip Address Details</h4>
+      <h4 className="text-center bg-primary text-white mb-4 p-2">House Rent Slip Address Details</h4>
 
       <div className="row g-3">
         {/* House Owner Name */}
