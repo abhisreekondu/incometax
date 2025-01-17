@@ -2,18 +2,25 @@ import React, { useState } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
+
 const Employeepayparticulars = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
     basicpay: "",
     incrementmonth: "",
     aas: "",
-    aasday: "",
+    aasbasic: 0,
     aasmonth: "",
+    aasda:0,
+    aashra:0,
     promotion: "",
-    promomon: "",
-    promoday: "",
+    promomon:"",
+   promobasic:0,
+   promoda:0,
+   promohra:0,
     surrenderleave: "Not Taken",
-    surrenderleavemon: "",
+    slbasic: 0,
+    slhra:0,
+    slda:0,
     availhalfpayleave: "",
     incomefromothersources: 0,
     twochildrenfee: 0,
@@ -101,24 +108,13 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
 
         {formData.aas === "Taken" && (
           <>
-            {/* Day Dropdown */}
-            <p className="p-0 m-0 b-0 text-primary">
-              *Enter the month and day from which AAS is taken*
+           
+            <p className="p-0 m-0 b-0 text-primary" style={{textAlign:"center"}}>
+              *Enter the Arrears of AAS taken*
             </p>
-            <div className="col-12 col-sm-6">
-              <BasicSelect
-                label="Day"
-                name="aasday"
-                value={formData.aasday}
-                options={Array.from({ length: 30 }, (_, i) =>
-                  (i + 1).toString()
-                )} // Days 1-30
-                onChange={handleChange}
-              />
-            </div>
-
+            
             {/* Month Dropdown */}
-            <div className="col-12 col-sm-6">
+            <div className="col-12 col-sm-6 col-md-3 " >
               <BasicSelect
                 label="Month"
                 name="aasmonth"
@@ -140,6 +136,39 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
                 onChange={handleChange}
               />
             </div>
+            <div className="col-12 col-sm-6 col-md-3 ">
+          <BasicTextField
+            label="AAS Basic"
+            name="aasbasic"
+            value={formData.aasbasic}
+            type="number"
+            onChange={handleChange}
+          />
+</div>
+<div className="col-12 col-sm-6 col-md-3">
+          <BasicTextField
+            label="AAS DA"
+            name="aasda"
+            value={formData.aasda}
+            type="number"
+            onChange={handleChange}
+          />
+</div>
+<div className="col-12 col-sm-6 col-md-3">
+          <BasicTextField
+            label="AAS HRA"
+            name="aashra"
+            value={formData.aashra}
+            type="number"
+            onChange={handleChange}
+          />
+</div>
+
+
+
+
+
+
           </>
         )}
         {/* Promotion */}
@@ -155,24 +184,10 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
 
         {formData.promotion === "Yes" && (
           <>
-            <p className="p-0 m-0 b-0 text-primary">
-              *Enter the day and month from which promotion is taken*
+            <p className="p-0 m-0 b-0 text-primary"  style={{textAlign:"center"}}>
+              *Enter the Arrears of promotion taken*
             </p>
-            {/* Day Dropdown */}
-            <div className="col-12 col-sm-6">
-              <BasicSelect
-                label="Day"
-                name="promoday"
-                value={formData.promoday}
-                options={Array.from({ length: 30 }, (_, i) =>
-                  (i + 1).toString()
-                )} // Days 1-30
-                onChange={handleChange}
-              />
-            </div>
-
-            {/* Month Dropdown */}
-            <div className="col-12 col-sm-6">
+           <div className="col-12 col-sm-6 col-md-3">
               <BasicSelect
                 label="Month"
                 name="promomon"
@@ -193,7 +208,34 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
                 ]}
                 onChange={handleChange}
               />
-            </div>
+              </div>
+               <div className="col-12 col-sm-6 col-md-3">
+               <BasicTextField
+            label="Promo Basic"
+            name="promobasic"
+            value={formData.promobasic}
+            type="number"
+            onChange={handleChange}
+          />
+          </div>
+          <div className="col-12 col-sm-6 col-md-3">
+          <BasicTextField
+            label="Promo DA"
+            name="promoda"
+            value={formData.promoda}
+            type="number"
+            onChange={handleChange}
+          />
+          </div>
+          <div className="col-12 col-sm-6 col-md-3">
+          <BasicTextField
+            label="Promo HRA"
+            name="promohra"
+            value={formData.promohra}
+            type="number"
+            onChange={handleChange}
+          />
+          </div>
           </>
         )}
         {/* surrenderleave */}
@@ -202,39 +244,48 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
             label="Surrender Leave"
             name="surrenderleave"
             value={formData.surrenderleave}
-            options={["Not Taken", "15 days Taken", "30 days Taken"]}
+            options={["Not Taken", "Taken"]}
             onChange={handleChange}
           />
         </div>
 
-        {formData.surrenderleave !== "Not Taken" && (
+        {formData.surrenderleave === "Taken" && (
           <>
             {/* Month Dropdown */}
-            <p className="p-0 m-0 b-0 text-primary">
-              *Enter the month from which Surrender leave is taken*
+            <p className="p-0 m-0 b-0 text-primary" style={{textAlign:"center"}}>
+              *Enter the Details of Surrender leave taken *
             </p>
-            <div className="col-12 ">
-              <BasicSelect
-                label="Month"
-                name="surrenderleavemon"
-                value={formData.surrenderleavemon}
-                options={[
-                  "Mar-24",
-                  "Apr-24",
-                  "May-24",
-                  "Jun-24",
-                  "Jul-24",
-                  "Aug-24",
-                  "Sep-24",
-                  "Oct-24",
-                  "Nov-24",
-                  "Dec-24",
-                  "Jan-25",
-                  "Feb-25",
-                ]}
-                onChange={handleChange}
-              />
-            </div>
+            <div className="col-12 col-sm-6 col-md-3">
+          <BasicTextField
+            label="SL Basic"
+            name="slbasic"
+            value={formData.slbasic}
+            type="number"
+            onChange={handleChange}
+          />
+          </div>
+            <div className="col-12 col-sm-6 col-md-3">
+          <BasicTextField
+            label="SL DA"
+            name="slda"
+            value={formData.slda}
+            type="number"
+            onChange={handleChange}
+          />
+</div>
+
+
+<div className="col-12 col-sm-6 col-md-3">
+          <BasicTextField
+            label="SL HRA"
+            name="slhra"
+            value={formData.slhra}
+            type="number"
+            onChange={handleChange}
+          />
+</div>
+              
+
           </>
         )}
 

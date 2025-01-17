@@ -12,7 +12,7 @@ const baseSalaries = [
 ];
 
 // Function to calculate the base salary for each month
-const calculateBaseSalary = (incrementMonth, aasMonth, startingBasicPay) => {
+const calculateBaseSalary = (incrementMonth, promomon, aasMonth, startingBasicPay) => {
   const months = [
     'Mar-24', 'Apr-24', 'May-24', 'Jun-24', 'Jul-24',
     'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24', 'Jan-25', 'Feb-25'
@@ -26,31 +26,41 @@ const calculateBaseSalary = (incrementMonth, aasMonth, startingBasicPay) => {
 
   const salaryMap = {};
 
-  months.forEach((month) => {
+  let incrementApplied = false; // Flag to track if incrementMonth has been processed
+  let aasApplied = false;       // Flag to track if aasMonth has been processed
+  let promoApplied = false;     // Flag to track if promomon has been processed
+
+  months.forEach((month, index) => {
     // Record the current salary for the month
     salaryMap[month] = baseSalaries[baseSalaryIndex];
 
-    // Increment logic (starting from incrementMonth)
-    if (month === incrementMonth) {
-      // If we're at the increment month, move to the next salary in the array (if not at the end)
+    // Increment logic for incrementMonth (applied from the incrementMonth itself)
+    if (month === incrementMonth && !incrementApplied) {
+      incrementApplied = true;
       if (baseSalaryIndex < baseSalaries.length - 1) {
         baseSalaryIndex++;
       }
-      salaryMap[month] = baseSalaries[baseSalaryIndex]; // Update the salary for that month
+      salaryMap[month] = baseSalaries[baseSalaryIndex];
     }
 
-    // AAS logic (if aasMonth is provided)
-    if (aasMonth && month === aasMonth) {
-      // Apply AAS if the month matches
+    // AAS logic (applied from the month after aasMonth)
+    if (aasMonth && months[index - 1] === aasMonth && !aasApplied) {
+      aasApplied = true;
       if (baseSalaryIndex < baseSalaries.length - 1) {
-        baseSalaryIndex++; // Increment salary for AAS month
+        baseSalaryIndex++;
       }
     }
 
-    // If the index is at the last salary, maintain the salary at the last value
-    if (baseSalaryIndex === baseSalaries.length - 1) {
-      salaryMap[month] = baseSalaries[baseSalaryIndex]; // Keep the salary the same after the last increment
+    // Promotion logic (applied from the month after promomon)
+    if (promomon && months[index - 1] === promomon && !promoApplied) {
+      promoApplied = true;
+      if (baseSalaryIndex < baseSalaries.length - 1) {
+        baseSalaryIndex++;
+      }
     }
+
+    // Ensure salary updates persist for subsequent months
+    salaryMap[month] = baseSalaries[baseSalaryIndex];
   });
 
   // Sort the months in chronological order

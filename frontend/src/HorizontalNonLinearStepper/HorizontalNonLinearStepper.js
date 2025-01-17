@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -13,6 +13,8 @@ import Adavancetax from '../components/Advancetaxpayments/Advancetax';
 import DDOdetails from '../components/DDOdetails/DDOdetails';
 import Salarydeductions from '../components/Salarydeductions/Salarydeductions';
 import SalaryTable from '../Table/SalaryTable'; // Import the SalaryTable component
+import { useLocation, useNavigate } from "react-router-dom";
+
 
 const steps = [
   { key: 'employeepersonaldetails' },
@@ -35,9 +37,16 @@ export default function HorizontalNonLinearStepper() {
     ddoDetails: {},
     salaryDeductions: {},
   });
-
+  const navigate = useNavigate();
+  const location = useLocation();
   const [showSalaryTable, setShowSalaryTable] = useState(false); // State to control rendering of the salary table
-  const [salaryData, setSalaryData] = useState(null); // State to hold salary data from the server
+  const [salaryData, setSalaryData] = useState(null); 
+  useEffect(() => {
+    if (location.state && location.state.formData) {
+      setFormData(location.state.formData); // Set the form data from the previous state
+    }
+  }, [location.state]);
+ 
 
   const totalSteps = () => steps.length;
 
@@ -76,6 +85,9 @@ export default function HorizontalNonLinearStepper() {
       .catch((error) => {
         console.error('Error submitting form data:', error);
       });
+
+
+      navigate("/table", { state: { formData } }); 
   };
 
   const handleFormUpdate = (stepKey, data) => {
@@ -146,7 +158,9 @@ export default function HorizontalNonLinearStepper() {
     return <SalaryTable data={salaryData} />;
   }
 
-  return (
+  return  (
+    <>
+    <h1  className="alert alert-success m-5 text-center" >Employees Income Tax Online Calculation FY 2024-25</h1>
     <Box sx={{ width: '100%' }}>
       <Box
         sx={{
@@ -213,5 +227,6 @@ export default function HorizontalNonLinearStepper() {
         </Box>
       </div>
     </Box>
+    </>
   );
 }

@@ -9,6 +9,11 @@ const { getCPS } = require("./services/deductions/cps");
 const { getAPGLI } = require("./services/deductions/apgli");
 const { getGIS } = require("./services/deductions/gis");
 const { getewfswf } = require("./services/deductions/ewfswf");
+
+// Global variables to hold salary data and form data
+let salaryData = null; // Initialize salaryData
+let formData = null; // Initialize formData
+
 // Middleware to parse JSON
 app.use(express.json());
 
@@ -25,13 +30,14 @@ app.use(
 app.post("/submit-salary-data", (req, res) => {
   console.log("Request Headers:", req.headers);
 
-  formData = req.body;
+  formData = req.body; // Assign the form data to the global variable
   console.log("Received Form Data:", formData);
 
   try {
     // Call your calculation methods
     const basesalary = calculateBaseSalary(
       formData.payParticulars.incrementmonth,
+      formData.payParticulars.promomon,
       formData.payParticulars.aasmonth,
       formData.payParticulars.basicpay
     );
@@ -64,7 +70,7 @@ app.post("/submit-salary-data", (req, res) => {
       formData.salaryDeductions.ewf,
       formData.salaryDeductions.swf
     );
-    // Save the result in temporary storage
+    // Save the result in global storage
     salaryData = {
       basesalary,
       da,
@@ -80,13 +86,11 @@ app.post("/submit-salary-data", (req, res) => {
     res.json({ message: "Success", basesalary, da, hra, hma });
   } catch (error) {
     console.error("Error in calculateBaseSalary:", error.message);
-    res
-      .status(500)
-      .json({
-        error: "Failed to calculate salary data",
-        error: error.message,
-        backtrace: error.backtrace,
-      });
+    res.status(500).json({
+      error: "Failed to calculate salary data",
+      error: error.message,
+      backtrace: error.backtrace,
+    });
   }
 });
 
@@ -100,6 +104,7 @@ app.get("/get-salary-data", (req, res) => {
   res.json(salaryData);
 });
 
+// GET API to fetch form data
 app.get("/get-form-data", (req, res) => {
   console.log("Current Form Data:", formData); // Log the current form data
   if (!formData) {

@@ -1,14 +1,18 @@
-import './App.css';
-
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HorizontalNonLinearStepper from './HorizontalNonLinearStepper/HorizontalNonLinearStepper';
 
-function App() {
+import SalaryTable from "./Table/SalaryTable";
+
+const App = () => {
   return (
-    <div className="App">
-    <h1 className="text-center m-4 alert alert-success">Employees Income Tax Online Calculation FY 2024-25</h1>
-      <HorizontalNonLinearStepper/>   
-  </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HorizontalNonLinearStepper />} />
+        <Route path="/table" element={<SalaryTable />} />
+      </Routes>
+    </Router>
   );
-}
+};
 
 export default App;
