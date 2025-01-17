@@ -1,4 +1,4 @@
-import React, { useState ,useEffect} from "react";
+import React, { useState } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
@@ -9,9 +9,9 @@ const Allowances = ({ data = {}, onUpdate }) => {
     hraper: "",
     hramon: "",
     pha: 0,
-    hwa:0,
-    hma: 0,
-    hmachange: "",
+    cca:0,
+    hma:0,
+    hmachange: "No",
     hmamon: "",
     hmaamt: "",
     otherallowance: 0,
@@ -99,12 +99,13 @@ const Allowances = ({ data = {}, onUpdate }) => {
             type="number"
             onChange={handleChange}
           />
+             
         </div>
         <div className="col-12 col-sm-6 col-md-4">
           <BasicTextField
-            label="HWA Allowance"
-            name="hwa"
-            value={formData.hwa}
+            label="HMA Allowance"
+            name="hma"
+            value={formData.hma}
             type="number"
             onChange={handleChange}
           />
@@ -160,6 +161,17 @@ const Allowances = ({ data = {}, onUpdate }) => {
             </div>
           </>
         )}
+
+
+<div className="col-12 col-sm-6 col-md-4">
+          <BasicTextField
+            label="CCA"
+            name="cca"
+            value={formData.cca}
+            type="number"
+            onChange={handleChange}
+          />
+        </div>
         <div className="col-12 col-sm-6 col-md-4">
           <BasicTextField
             label="Other Allowance"

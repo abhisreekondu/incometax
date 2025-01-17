@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
@@ -50,9 +50,13 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
               89720, 92110, 94500, 96890, 99430, 101970, 104510, 107210, 109910,
               112610, 115500, 118390, 121280, 124380, 127480, 130580, 133900,
               137220, 140540, 144150, 147760, 151370, 154980, 158880, 162780,
-              166680, 170580,
+              166680, 170580
             ]}
             onChange={handleChange}
+            native // Enable native HTML select behavior
+            inputProps={{
+              required: true,
+            }}
           />
         </div>
 
@@ -77,6 +81,10 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
               "Feb-25",
             ]}
             onChange={handleChange}
+            native // Enable native HTML select behavior
+            inputProps={{
+              required: true,
+            }}
           />
         </div>
 
@@ -199,7 +207,7 @@ const Employeepayparticulars = ({ data = {}, onUpdate }) => {
           />
         </div>
 
-        {formData.surrenderleave != "Not Taken" && (
+        {formData.surrenderleave !== "Not Taken" && (
           <>
             {/* Month Dropdown */}
             <p className="p-0 m-0 b-0 text-primary">

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -12,6 +12,7 @@ import Anyotherarrears from '../components/Anyotherarrears/Anyotherarrears';
 import Adavancetax from '../components/Advancetaxpayments/Advancetax';
 import DDOdetails from '../components/DDOdetails/DDOdetails';
 import Salarydeductions from '../components/Salarydeductions/Salarydeductions';
+import SalaryTable from '../Table/SalaryTable'; // Import the SalaryTable component
 
 const steps = [
   { key: 'employeepersonaldetails' },
@@ -24,10 +25,8 @@ const steps = [
 ];
 
 export default function HorizontalNonLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
-
-  // Shared state to store form data for all steps
-  const [formData, setFormData] = React.useState({
+  const [activeStep, setActiveStep] = useState(0);
+  const [formData, setFormData] = useState({
     personalDetails: {},
     payParticulars: {},
     allowances: {},
@@ -36,6 +35,9 @@ export default function HorizontalNonLinearStepper() {
     ddoDetails: {},
     salaryDeductions: {},
   });
+
+  const [showSalaryTable, setShowSalaryTable] = useState(false); // State to control rendering of the salary table
+  const [salaryData, setSalaryData] = useState(null); // State to hold salary data from the server
 
   const totalSteps = () => steps.length;
 
@@ -55,6 +57,25 @@ export default function HorizontalNonLinearStepper() {
 
   const handleCalculate = () => {
     console.log('Final form data:', formData);
+
+    // Send formData to the server
+    fetch('http://localhost:3002/submit-salary-data', {
+      method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  body: JSON.stringify(formData), // Pass the form data
+  credentials: 'include',
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log('Server Response:', data);
+        setSalaryData(data); // Save the salary data for rendering the table
+        setShowSalaryTable(true); // Switch to salary table view
+      })
+      .catch((error) => {
+        console.error('Error submitting form data:', error);
+      });
   };
 
   const handleFormUpdate = (stepKey, data) => {
@@ -120,35 +141,28 @@ export default function HorizontalNonLinearStepper() {
     }
   };
 
+  // Conditionally render either the Stepper or the Salary Table
+  if (showSalaryTable) {
+    return <SalaryTable data={salaryData} />;
+  }
+
   return (
     <Box sx={{ width: '100%' }}>
       <Box
         sx={{
           width: '100%',
           maxWidth: {
-            xs: '100%', // 90% width on small screens
-            sm: '80%', // 80% width on medium screens
-            md: '70%', // 70% width on large screens
+            xs: '100%',
+            sm: '80%',
+            md: '70%',
           },
-          mx: 'auto', // Center align the Stepper horizontally
+          mx: 'auto',
         }}
       >
-        <Stepper
-          nonLinear
-          activeStep={activeStep}
-          sx={{
-            flexWrap: {
-              xs: 'wrap', // Wrap on small screens
-              sm: 'nowrap', // Single line on larger screens
-            },
-            justifyContent: 'center', // Center steps
-          }}
-        >
+        <Stepper nonLinear activeStep={activeStep} sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, justifyContent: 'center' }}>
           {steps.map((step, index) => (
             <Step key={step.key}>
-              <StepButton color="inherit" onClick={() => handleStep(index)}>
-               
-              </StepButton>
+              <StepButton color="inherit" onClick={() => handleStep(index)} />
             </Step>
           ))}
         </Stepper>
