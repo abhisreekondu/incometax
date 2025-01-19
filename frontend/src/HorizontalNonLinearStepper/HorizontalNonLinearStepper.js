@@ -4,7 +4,6 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Employeepersonaldetails from '../components/Employeepersonaldetails/Employeepersonaldetails';
 import Employeepayparticulars from '../components/Employeepayparticulars/Employeepayparticulars';
 import Allowances from '../components/Allowances(monthly)/Allowances';
@@ -12,42 +11,55 @@ import Anyotherarrears from '../components/Anyotherarrears/Anyotherarrears';
 import Adavancetax from '../components/Advancetaxpayments/Advancetax';
 import DDOdetails from '../components/DDOdetails/DDOdetails';
 import Salarydeductions from '../components/Salarydeductions/Salarydeductions';
-import SalaryTable from '../Table/SalaryTable'; // Import the SalaryTable component
+import SalaryTable from '../Table/SalaryTable';
 import { useLocation, useNavigate } from "react-router-dom";
-
-
-const steps = [
-  { key: 'employeepersonaldetails' },
-  { key: 'employeepayparticulars' },
-  { key: 'allowances' },
-  { key: 'anyotherarrears' },
-  { key: 'advancetax' },
-  { key: 'ddodetails' },
-  { key: 'salarydeductions' },
-];
+import useFormStore from '../store/formStore';
 
 export default function HorizontalNonLinearStepper() {
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState({
-    personalDetails: {},
-    payParticulars: {},
-    allowances: {},
-    arrears: {},
-    advanceTax: {},
-    ddoDetails: {},
-    salaryDeductions: {},
-  });
+  const formData = useFormStore((state) => state.formData);
+  const setFormData = useFormStore((state) => state.setFormData);
   const navigate = useNavigate();
   const location = useLocation();
-  const [showSalaryTable, setShowSalaryTable] = useState(false); // State to control rendering of the salary table
+  const [showSalaryTable, setShowSalaryTable] = useState(false);
   const [salaryData, setSalaryData] = useState(null); 
+  const steps = [
+    {
+      key: 'employeepersonaldetails',
+      component: <Employeepersonaldetails data={formData.personalDetails} onUpdate={(data) => handleFormUpdate('personalDetails', data)} />
+    },
+    {
+      key: 'employeepayparticulars',
+      component: <Employeepayparticulars data={formData.payParticulars} onUpdate={(data) => handleFormUpdate('payParticulars', data)} />
+    },
+    {
+      key: 'allowances',
+      component: <Allowances data={formData.allowances} onUpdate={(data) => handleFormUpdate('allowances', data)} />
+    },
+    {
+      key: 'anyotherarrears',
+      component: <Anyotherarrears data={formData.arrears} onUpdate={(data) => handleFormUpdate('arrears', data)} />
+    },
+    {
+      key: 'advancetax',
+      component: <Adavancetax data={formData.advanceTax} onUpdate={(data) => handleFormUpdate('advanceTax', data)} />
+    },
+    {
+      key: 'ddodetails',
+      component: <DDOdetails data={formData.ddoDetails} onUpdate={(data) => handleFormUpdate('ddoDetails', data)} />
+    },
+    {
+      key: 'salarydeductions',
+      component: <Salarydeductions data={formData.salaryDeductions} onUpdate={(data) => handleFormUpdate('salaryDeductions', data)} />
+    },
+  ];
   useEffect(() => {
     const savedFormData = localStorage.getItem("formData");
   
     if (savedFormData) {
-      setFormData(JSON.parse(savedFormData)); // Restore form data from localStorage
+      setFormData(JSON.parse(savedFormData));
     } else if (location.state && location.state.formData) {
-      setFormData(location.state.formData); // Restore form data from location.state
+      setFormData(location.state.formData);
     }
   }, [location.state]);
   
@@ -97,82 +109,28 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const handleFormUpdate = (stepKey, data) => {
-    const updatedFormData = {
-      ...formData,
+    setFormData({
       [stepKey]: data,
-    };
+    });
+  }; 
   
-    setFormData(updatedFormData);
-  
-    // Save the updated form data to localStorage
-    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+  const getComponentByKey = (key) => {
+    const step = steps.find((step) => step.key === key);
+    return step ? step.component : null;
   };
   
-
-  const renderStepContent = (stepKey) => {
-    switch (stepKey) {
-      case 'employeepersonaldetails':
-        return (
-          <Employeepersonaldetails
-            data={formData.personalDetails}
-            onUpdate={(data) => handleFormUpdate('personalDetails', data)}
-          />
-        );
-      case 'employeepayparticulars':
-        return (
-          <Employeepayparticulars
-            data={formData.payParticulars}
-            onUpdate={(data) => handleFormUpdate('payParticulars', data)}
-          />
-        );
-      case 'allowances':
-        return (
-          <Allowances
-            data={formData.allowances}
-            onUpdate={(data) => handleFormUpdate('allowances', data)}
-          />
-        );
-      case 'anyotherarrears':
-        return (
-          <Anyotherarrears
-            data={formData.arrears}
-            onUpdate={(data) => handleFormUpdate('arrears', data)}
-          />
-        );
-      case 'advancetax':
-        return (
-          <Adavancetax
-            data={formData.advanceTax}
-            onUpdate={(data) => handleFormUpdate('advanceTax', data)}
-          />
-        );
-      case 'ddodetails':
-        return (
-          <DDOdetails
-            data={formData.ddoDetails}
-            onUpdate={(data) => handleFormUpdate('ddoDetails', data)}
-          />
-        );
-      case 'salarydeductions':
-        return (
-          <Salarydeductions
-            data={formData.salaryDeductions}
-            onUpdate={(data) => handleFormUpdate('salaryDeductions', data)}
-          />
-        );
-      default:
-        return <Typography>Unknown Step</Typography>;
-    }
-  };
-
   // Conditionally render either the Stepper or the Salary Table
   if (showSalaryTable) {
     return <SalaryTable data={salaryData} />;
   }
 
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const financialYear = `FY ${currentYear-1} - ${currentYear}`;
+
   return  (
     <>
-    <h1  className="alert alert-success m-5 text-center" >Employees Income Tax Online Calculation FY 2024-25</h1>
+    <h1  className="alert alert-success m-5 text-center" >Employees Income Tax Online Calculation {financialYear}</h1>
     <Box sx={{ width: '100%' }}>
       <Box
         sx={{
@@ -196,7 +154,7 @@ export default function HorizontalNonLinearStepper() {
 
       <div>
         <Box sx={{ mt: 2, mb: 1, py: 1 }}>
-          {renderStepContent(steps[activeStep]?.key)}
+          {getComponentByKey(steps[activeStep]?.key)}
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, gap: 2 }}>
           <Button
