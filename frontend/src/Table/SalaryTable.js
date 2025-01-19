@@ -12,54 +12,78 @@ import {
   Box,
 } from "@mui/material";
 import Button from "@mui/material/Button";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
-
+import useFormStore from "../store/formStore";
+import useSalaryDataStore from "../store/salaryDataStore";
 const SalaryTable = () => {
   const [rows, setRows] = useState([]);
   const [otherRows, setOtherRows] = useState({}); // Define otherRows state
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null);
-  const [sums, setSums] = useState(null); // Error state
-  const location = useLocation(); // Access the state passed from the form
+  const [sums, setSums] = useState(null);
+  const formData = useFormStore((state) => state.formData);
+  const salaryData = useSalaryDataStore((state) => state.salaryData);
   const navigate = useNavigate();
 
+  useEffect(() => {
+    setLoading(true); 
+    setError(null);
+    const fetchSums = async () => {
+      try {
+        const computedSums = await calculateSumsUsingAPI(rows, otherRows);
+       if(computedSums) setSums(computedSums);
+        else {
+          setError("Failed to fetch sums from the server."); // Set an error message if API returns null
+        }
+      } catch (error) {
+        setError("An error occurred while fetching sums."); 
+        console.error("Error in fetchSums:", error);
+      }
+      finally {
+        setLoading(false); // End loading
+      }
+    };
+
+    fetchSums();
+  }, [rows, otherRows]);
+
   // Function to calculate financial year months dynamically
-const getFinancialYearMonths = () => {
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const currentMonth = currentDate.getMonth(); // 0 (Jan) to 11 (Dec)
+  const getFinancialYearMonths = () => {
+    const currentDate = new Date();
+    const currentYear = currentDate.getFullYear();
+    const currentMonth = currentDate.getMonth(); // 0 (Jan) to 11 (Dec)
 
-  // Determine financial year start and end
-  const financialYearStart = currentMonth < 3 ? currentYear - 1 : currentYear;
-  const financialYearEnd = financialYearStart + 1;
+    // Determine financial year start and end
+    const financialYearStart = currentMonth < 3 ? currentYear - 1 : currentYear;
+    const financialYearEnd = financialYearStart + 1;
 
-  // Generate months from March to February
-  return [
-    `Mar-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Apr-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `May-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Jun-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Jul-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Aug-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Sep-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Oct-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Nov-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Dec-${(financialYearEnd - 1).toString().slice(-2)}`,
-    `Jan-${financialYearEnd.toString().slice(-2)}`,
-    `Feb-${financialYearEnd.toString().slice(-2)}`,
-  ];
-};
+    // Generate months from March to February
+    return [
+      `Mar-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Apr-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `May-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Jun-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Jul-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Aug-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Sep-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Oct-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Nov-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Dec-${(financialYearEnd - 1).toString().slice(-2)}`,
+      `Jan-${financialYearEnd.toString().slice(-2)}`,
+      `Feb-${financialYearEnd.toString().slice(-2)}`,
+    ];
+  };
 
   // Fixed months for the table
   const months = getFinancialYearMonths();
 
   const handleEdit = () => {
-    navigate("/", { state: location.state }); // Navigate back to the form with previous data
+    navigate("/"); // Navigate back to the form with previous data
   };
   const handleAnnexure = () => {
-    navigate("/annexureii", { state: location.state }); // Navigate back to the form with previous data
+    navigate("/annexureii"); // Navigate back to the form with previous data
   };
   const handleDownload = async () => {
     const element = document.getElementById("page-content"); // Target the element
@@ -108,116 +132,94 @@ const getFinancialYearMonths = () => {
     }
   };
 
+  const getTableData = () => {
+    return months.map((month, index) => ({
+      sno: index + 1,
+      month,
+      basic: salaryData.basesalary[month] || "N/A",
+      da: salaryData.da[month] || "N/A",
+      hra: salaryData.hra[month] || 0,
+      ir: 0,
+      hma: salaryData.hma[month] || 0,
+      cca: formData.allowances.cca || 0,
+      pha: formData.allowances.pha || 0,
+      others: formData.allowances.otherallowance || 0,
+      gross:
+        parseInt(salaryData.basesalary[month] || 0) +
+          parseInt(salaryData.da[month] || 0) +
+          parseInt(salaryData.hra[month] || 0) +
+          parseInt(salaryData.hma[month] || 0) +
+          parseInt(formData.allowances.cca || 0) +
+          parseInt(formData.allowances.pha || 0) +
+          parseInt(formData.allowances.otherallowance || 0) || 0,
+      cps: salaryData.cps[month] || 0,
+      apgli: salaryData.apgli[month] || 0,
+      gis: salaryData.gis[month] || 0,
+      pt: 200,
+      itadv: formData.advanceTax[month] || 0,
+      ehf: formData.salaryDeductions.ehsamt || 0,
+      ewfswf: salaryData.ewfswf[month] || 0,
+      otherdeductions: formData.salaryDeductions.otherdeductions || 0,
+      totaldeductions:
+        parseInt(salaryData.cps[month] || 0) +
+        parseInt(salaryData.apgli[month] || 0) +
+        parseInt(salaryData.gis[month] || 0) +
+        200 +
+        parseInt(formData.advanceTax[month] || 0) +
+        parseInt(formData.salaryDeductions.ehsamt || 0) +
+        parseInt(salaryData.ewfswf[month] || 0) +
+        parseInt(formData.salaryDeductions.otherdeductions || 0),
+      net:
+        parseInt(salaryData.basesalary[month] || 0) +
+        parseInt(salaryData.da[month] || 0) +
+        parseInt(salaryData.hra[month] || 0) +
+        parseInt(salaryData.hma[month] || 0) +
+        parseInt(formData.allowances.cca || 0) +
+        parseInt(formData.allowances.pha || 0) +
+        parseInt(formData.allowances.otherallowance || 0) -
+        (parseInt(salaryData.cps[month] || 0) +
+          parseInt(salaryData.apgli[month] || 0) +
+          parseInt(salaryData.gis[month] || 0) +
+          200 +
+          parseInt(formData.advanceTax[month] || 0) +
+          parseInt(formData.salaryDeductions.ehsamt || 0) +
+          parseInt(salaryData.ewfswf[month] || 0) +
+          parseInt(formData.salaryDeductions.otherdeductions || 0)),
+    }))
+  };
+
+  const getOtherData = () => {
+    return {
+      aasbasic: formData.payParticulars.aasbasic || 0,
+      aasda: formData.payParticulars.aasda || 0,
+      aashra: formData.payParticulars.aashra || 0,
+      promobasic: formData.payParticulars.promobasic || 0,
+      promoda: formData.payParticulars.promoda || 0,
+      promohra: formData.payParticulars.promohra || 0,
+      slbasic: formData.payParticulars.slbasic || 0,
+      slda: formData.payParticulars.slda || 0,
+      slhra: formData.payParticulars.slhra || 0,
+      othbasic: formData.arrears.arrearpay || 0,
+      othda: formData.arrears.arrearda || 0,
+      othhra: formData.arrears.arrearhra || 0,
+      empname:
+        formData.personalDetails.employeeName ||
+        "mention name in personal details",
+      empid:
+        formData.personalDetails.employeeId || "mention id in personal details",
+    }
+  };
+
   useEffect(() => {
-    const fetchSalaryData = async () => {
-      try {
-        const [salaryResponse, formResponse] = await Promise.all([
-          fetch("http://localhost:3002/get-salary-data"),
-          fetch("http://localhost:3002/get-form-data"),
-       
-        ]);
-  
-        if (!salaryResponse.ok) {
-          throw new Error(`Salary data error: ${salaryResponse.status}`);
-        }
-        if (!formResponse.ok) {
-          throw new Error(`Form data error: ${formResponse.status}`);
-        }
-  
-        const salaryData = await salaryResponse.json();
-        const formData = await formResponse.json();
-  
-        const tableData = months.map((month, index) => ({
-          sno: index + 1,
-          month,
-          basic: salaryData.basesalary[month] || "N/A",
-          da: salaryData.da[month] || "N/A",
-          hra: salaryData.hra[month] || 0,
-          ir: 0,
-          hma: salaryData.hma[month] || 0,
-          cca: formData.allowances.cca || 0,
-          pha: formData.allowances.pha || 0,
-          others: formData.allowances.otherallowance || 0,
-          gross:
-            parseInt(salaryData.basesalary[month] || 0) +
-            parseInt(salaryData.da[month] || 0) +
-            parseInt(salaryData.hra[month] || 0) +
-            parseInt(salaryData.hma[month] || 0) +
-            parseInt(formData.allowances.cca || 0) +
-            parseInt(formData.allowances.pha || 0) +
-            parseInt(formData.allowances.otherallowance || 0) || 0,
-          cps: salaryData.cps[month] || 0,
-          apgli: salaryData.apgli[month] || 0,
-          gis: salaryData.gis[month] || 0,
-          pt: 200,
-          itadv: formData.advanceTax[month] || 0,
-          ehf: formData.salaryDeductions.ehsamt || 0,
-          ewfswf: salaryData.ewfswf[month] || 0,
-          otherdeductions: formData.salaryDeductions.otherdeductions || 0,
-          totaldeductions:
-            parseInt(salaryData.cps[month] || 0) +
-            parseInt(salaryData.apgli[month] || 0) +
-            parseInt(salaryData.gis[month] || 0) +
-            200 +
-            parseInt(formData.advanceTax[month] || 0) +
-            parseInt(formData.salaryDeductions.ehsamt || 0) +
-            parseInt(salaryData.ewfswf[month] || 0) +
-            parseInt(formData.salaryDeductions.otherdeductions || 0),
-          net:
-            parseInt(salaryData.basesalary[month] || 0) +
-            parseInt(salaryData.da[month] || 0) +
-            parseInt(salaryData.hra[month] || 0) +
-            parseInt(salaryData.hma[month] || 0) +
-            parseInt(formData.allowances.cca || 0) +
-            parseInt(formData.allowances.pha || 0) +
-            parseInt(formData.allowances.otherallowance || 0) -
-            (parseInt(salaryData.cps[month] || 0) +
-              parseInt(salaryData.apgli[month] || 0) +
-              parseInt(salaryData.gis[month] || 0) +
-              200 +
-              parseInt(formData.advanceTax[month] || 0) +
-              parseInt(formData.salaryDeductions.ehsamt || 0) +
-              parseInt(salaryData.ewfswf[month] || 0) +
-              parseInt(formData.salaryDeductions.otherdeductions || 0)),
-        }));
-  
-        const otherData = {
-          aasbasic: formData.payParticulars.aasbasic || 0,
-          aasda: formData.payParticulars.aasda || 0,
-          aashra: formData.payParticulars.aashra || 0,
-          promobasic: formData.payParticulars.promobasic || 0,
-          promoda: formData.payParticulars.promoda || 0,
-          promohra: formData.payParticulars.promohra || 0,
-          slbasic: formData.payParticulars.slbasic || 0,
-          slda: formData.payParticulars.slda || 0,
-          slhra: formData.payParticulars.slhra || 0,
-          othbasic: formData.arrears.arrearpay || 0,
-          othda: formData.arrears.arrearda || 0,
-          othhra: formData.arrears.arrearhra || 0,
-          empname:
-            formData.personalDetails.employeeName ||
-            "mention name in personal details",
-          empid:
-            formData.personalDetails.employeeId ||
-            "mention id in personal details",
-        };
-  
-        setRows(tableData);
-        setOtherRows(otherData);
-  
-        const sums = await calculateSumsUsingAPI(tableData, otherData);
-        setSums(sums);
-        console.log("Computed Sums:", sums);
-      } catch (error) {
-        console.error("Error fetching data:",  error);
-        setError("Failed to load data. Please try again later.");
-      } finally {
-        setLoading(false);
-      }
-    };
-  
-    fetchSalaryData();
-  }, []);
+    if(salaryData === null || salaryData.basesalary === null) { 
+      navigate("/");
+    } else {
+      const tableData = getTableData();
+      const otherData = getOtherData();
+      setRows(tableData);
+      setOtherRows(otherData);
+    }
+  }, [salaryData, formData]);
   
 
   const calculateSumsUsingAPI = async (rows, otherRows) => {
@@ -227,49 +229,48 @@ const getFinancialYearMonths = () => {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ rows, otherRows }),
       });
-  
+
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
-  
+
       const sums = await response.json();
       return sums;
     } catch (error) {
       console.error("Error calculating sums using API:", error);
-      return null; 
+      return null;
     }
   };
-  
-  
-  // Render loading spinner
-  if (loading) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
 
-  // Render error message
-  if (error) {
-    return (
-      <Box
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-        height="100vh"
-      >
-        <Typography variant="h6" color="error">
-          {error}
-        </Typography>
-      </Box>
-    );
-  }
+  // // Render loading spinner
+  // if (loading) {
+  //   return (
+  //     <Box
+  //       display="flex"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //       height="100vh"
+  //     >
+  //       <CircularProgress />
+  //     </Box>
+  //   );
+  // }
+
+  // // Render error message
+  // if (error) {
+  //   return (
+  //     <Box
+  //       display="flex"
+  //       justifyContent="center"
+  //       alignItems="center"
+  //       height="100vh"
+  //     >
+  //       <Typography variant="h6" color="error">
+  //         {error}
+  //       </Typography>
+  //     </Box>
+  //   );
+  // }
 
   // Render the salary table
   return (
@@ -637,30 +638,30 @@ const getFinancialYearMonths = () => {
             </TableRow>
           </TableBody>
           <tfoot>
-          <TableRow style={{ height: "120px", border: "none" }}>
-            <TableCell
-              colSpan={11}
-              align="right"
-              style={{
-                fontWeight: "bold",
-                verticalAlign: "bottom",
-                border: "none", // Remove the border for this cell
-              }}
-            >
-              Signature of the Teacher
-            </TableCell>
-            <TableCell
-              colSpan={18}
-              align="right"
-              style={{
-                fontWeight: "bold",
-                verticalAlign: "bottom",
-                border: "none", // Remove the border for this cell
-              }}
-            >
-              Signature of the DDO
-            </TableCell>
-          </TableRow>
+            <TableRow style={{ height: "120px", border: "none" }}>
+              <TableCell
+                colSpan={11}
+                align="right"
+                style={{
+                  fontWeight: "bold",
+                  verticalAlign: "bottom",
+                  border: "none", // Remove the border for this cell
+                }}
+              >
+                Signature of the Teacher
+              </TableCell>
+              <TableCell
+                colSpan={18}
+                align="right"
+                style={{
+                  fontWeight: "bold",
+                  verticalAlign: "bottom",
+                  border: "none", // Remove the border for this cell
+                }}
+              >
+                Signature of the DDO
+              </TableCell>
+            </TableRow>
           </tfoot>
         </Table>
       </TableContainer>
@@ -685,7 +686,8 @@ const getFinancialYearMonths = () => {
         variant="contained"
         style={{ marginTop: "20px", marginLeft: "10px" }}
         onClick={handleAnnexure}
-      >Annexue-II
+      >
+        Annexue-II
       </Button>
     </div>
   );

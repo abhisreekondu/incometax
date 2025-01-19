@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -12,7 +12,6 @@ import Anyotherarrears from '../components/Anyotherarrears/Anyotherarrears';
 import Adavancetax from '../components/Advancetaxpayments/Advancetax';
 import DDOdetails from '../components/DDOdetails/DDOdetails';
 import Salarydeductions from '../components/Salarydeductions/Salarydeductions';
-import SalaryTable from '../Table/SalaryTable';
 import { useNavigate } from "react-router-dom";
 import useFormStore from '../store/formStore';
 import useSalaryDataStore from '../store/salaryDataStore';
@@ -21,10 +20,8 @@ export default function HorizontalNonLinearStepper() {
   const [activeStepKey, setActiveStepKey] = useState('employeepersonaldetails');
   const formData = useFormStore((state) => state.formData);
   const setFormData = useFormStore((state) => state.setFormData);
-  const salaryData = useSalaryDataStore((state) => state.salaryData);
   const setSalaryData = useSalaryDataStore((state) => state.setSalaryData);
   const navigate = useNavigate();
-  const [showSalaryTable, setShowSalaryTable] = useState(false);
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
   const financialYear = `FY ${currentYear-1} - ${currentYear}`;
@@ -114,18 +111,12 @@ export default function HorizontalNonLinearStepper() {
       console.log('Server Response:', data);
 
       setSalaryData(data);
-      setShowSalaryTable(true);
 
       navigate("/table");
     } catch (error) {
       console.error('Error submitting form data:', error);
     }
   };
-
-  // Conditionally render either the Stepper or the Salary Table
-  if (showSalaryTable) {
-    return <SalaryTable data={salaryData} />;
-  }
 
   return  (
     <>

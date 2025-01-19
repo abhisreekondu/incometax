@@ -84,7 +84,7 @@ app.post("/submit-salary-data", (req, res) => {
     };
 
     // Send success response with calculated data
-    res.json({ message: "Success", basesalary, da, hra, hma });
+    res.json(salaryData);
   } catch (error) {
     console.error("Error in calculateBaseSalary:", error.message);
     res.status(500).json({
@@ -93,25 +93,6 @@ app.post("/submit-salary-data", (req, res) => {
       backtrace: error.backtrace,
     });
   }
-});
-
-// GET API to fetch the calculated salary data
-app.get("/get-salary-data", (req, res) => {
-  if (!salaryData) {
-    return res
-      .status(404)
-      .json({ error: "Salary data not found. Please submit the form first." });
-  }
-  res.json(salaryData);
-});
-
-// GET API to fetch form data
-app.get("/get-form-data", (req, res) => {
-  console.log("Current Form Data:", formData); // Log the current form data
-  if (!formData) {
-    return res.status(404).json({ error: "Form Data not found" });
-  }
-  res.json(formData);
 });
 
 
@@ -218,15 +199,7 @@ app.post("/calculate-sums", (req, res) => {
 }
 )
 
-app.get("/get-calculatedsums",(req,res)=>{
-  if (!sums) {
-    return res
-      .status(404)
-      .json({ error: "Error in calculating the sum of the data" });
-  }
-  res.json(sums);
 
-})
 
 
 // Start the server
