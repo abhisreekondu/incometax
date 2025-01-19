@@ -68,8 +68,8 @@ export default function HorizontalNonLinearStepper() {
     }
   };
 
-  const isFirstStep = () => steps[activeStepKey] === 'employeepersonaldetails';
-  const isLastStep = () => steps[activeStepKey] === 'salarydeductions';
+  const isFirstStep = () => activeStepKey === 'employeepersonaldetails';
+  const isLastStep = () => activeStepKey === 'salarydeductions';
 
   const handleNext = () => {
     const nextStep = steps[activeStepKey]?.next;
