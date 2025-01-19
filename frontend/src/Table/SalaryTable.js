@@ -20,7 +20,8 @@ const SalaryTable = () => {
   const [rows, setRows] = useState([]);
   const [otherRows, setOtherRows] = useState({}); // Define otherRows state
   const [loading, setLoading] = useState(true); // Loading state
-  const [error, setError] = useState(null); // Error state
+  const [error, setError] = useState(null);
+  const [sums, setSums] = useState(null); // Error state
   const location = useLocation(); // Access the state passed from the form
   const navigate = useNavigate();
 
@@ -111,20 +112,21 @@ const getFinancialYearMonths = () => {
     const fetchSalaryData = async () => {
       try {
         const [salaryResponse, formResponse] = await Promise.all([
-          fetch("http://localhost:3002/get-salary-data"), // Fetch salary data
-          fetch("http://localhost:3002/get-form-data"), // Fetch form data
+          fetch("http://localhost:3002/get-salary-data"),
+          fetch("http://localhost:3002/get-form-data"),
+       
         ]);
-
+  
         if (!salaryResponse.ok) {
           throw new Error(`Salary data error: ${salaryResponse.status}`);
         }
         if (!formResponse.ok) {
           throw new Error(`Form data error: ${formResponse.status}`);
         }
-
+  
         const salaryData = await salaryResponse.json();
         const formData = await formResponse.json();
-
+  
         const tableData = months.map((month, index) => ({
           sno: index + 1,
           month,
@@ -138,13 +140,12 @@ const getFinancialYearMonths = () => {
           others: formData.allowances.otherallowance || 0,
           gross:
             parseInt(salaryData.basesalary[month] || 0) +
-              parseInt(salaryData.da[month] || 0) +
-              parseInt(salaryData.hra[month] || 0) +
-              parseInt(salaryData.hma[month] || 0) +
-              parseInt(formData.allowances.cca || 0) +
-              parseInt(formData.allowances.pha || 0) +
-              parseInt(formData.allowances.otherallowance || 0) || 0,
-
+            parseInt(salaryData.da[month] || 0) +
+            parseInt(salaryData.hra[month] || 0) +
+            parseInt(salaryData.hma[month] || 0) +
+            parseInt(formData.allowances.cca || 0) +
+            parseInt(formData.allowances.pha || 0) +
+            parseInt(formData.allowances.otherallowance || 0) || 0,
           cps: salaryData.cps[month] || 0,
           apgli: salaryData.apgli[month] || 0,
           gis: salaryData.gis[month] || 0,
@@ -157,12 +158,11 @@ const getFinancialYearMonths = () => {
             parseInt(salaryData.cps[month] || 0) +
             parseInt(salaryData.apgli[month] || 0) +
             parseInt(salaryData.gis[month] || 0) +
-            200 + // PT is a constant value
+            200 +
             parseInt(formData.advanceTax[month] || 0) +
             parseInt(formData.salaryDeductions.ehsamt || 0) +
             parseInt(salaryData.ewfswf[month] || 0) +
             parseInt(formData.salaryDeductions.otherdeductions || 0),
-
           net:
             parseInt(salaryData.basesalary[month] || 0) +
             parseInt(salaryData.da[month] || 0) +
@@ -174,14 +174,14 @@ const getFinancialYearMonths = () => {
             (parseInt(salaryData.cps[month] || 0) +
               parseInt(salaryData.apgli[month] || 0) +
               parseInt(salaryData.gis[month] || 0) +
-              200 + // PT is constant
+              200 +
               parseInt(formData.advanceTax[month] || 0) +
               parseInt(formData.salaryDeductions.ehsamt || 0) +
               parseInt(salaryData.ewfswf[month] || 0) +
               parseInt(formData.salaryDeductions.otherdeductions || 0)),
         }));
-
-        const otherRows = {
+  
+        const otherData = {
           aasbasic: formData.payParticulars.aasbasic || 0,
           aasda: formData.payParticulars.aasda || 0,
           aashra: formData.payParticulars.aashra || 0,
@@ -201,117 +201,46 @@ const getFinancialYearMonths = () => {
             formData.personalDetails.employeeId ||
             "mention id in personal details",
         };
-
-        setRows(tableData); // Only set the main rows
-        setOtherRows(otherRows); // Store other rows separately
-        setLoading(false); // Data successfully loaded
+  
+        setRows(tableData);
+        setOtherRows(otherData);
+  
+        const sums = await calculateSumsUsingAPI(tableData, otherData);
+        setSums(sums);
+        console.log("Computed Sums:", sums);
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:",  error);
         setError("Failed to load data. Please try again later.");
-        setLoading(false); // Stop loading on error
+      } finally {
+        setLoading(false);
       }
     };
-
+  
     fetchSalaryData();
   }, []);
-
-  const calculateSums = (rows, otherRows) => {
-    const sums = {
-      basic: 0,
-      da: 0,
-      hra: 0,
-      ir: 0,
-      hma: 0,
-      cca: 0,
-      pha: 0,
-      others: 0,
-      gross: 0,
-      cps: 0,
-      apgli: 0,
-      gis: 0,
-      pt: 0,
-      itadv: 0,
-      ehf: 0,
-      ewfswf: 0,
-      otherdeductions: 0,
-      totaldeductions: 0,
-      net: 0,
-    };
-
-    rows.forEach((row) => {
-      sums.basic += parseInt(row.basic || 0);
-      sums.da += parseInt(row.da || 0);
-      sums.hra += parseInt(row.hra || 0);
-      sums.ir += parseInt(row.ir || 0);
-      sums.hma += parseInt(row.hma || 0);
-      sums.cca += parseInt(row.cca || 0);
-      sums.pha += parseInt(row.pha || 0);
-      sums.others += parseInt(row.others || 0);
-      sums.gross += parseInt(row.gross || 0); // Ensure no double counting here
-      sums.cps += parseInt(row.cps || 0);
-      sums.apgli += parseInt(row.apgli || 0);
-      sums.gis += parseInt(row.gis || 0);
-      sums.pt += 200; // PT is constant
-      sums.itadv += parseInt(row.itadv || 0);
-      sums.ehf += parseInt(row.ehf || 0);
-      sums.ewfswf += parseInt(row.ewfswf || 0);
-      sums.otherdeductions += parseInt(row.otherdeductions || 0);
-      sums.totaldeductions += parseInt(row.totaldeductions || 0);
-      sums.net += parseInt(row.net || 0);
-    });
-
-    // Add values from otherRows
-    sums.basic +=
-      parseInt(otherRows.aasbasic || 0) +
-      parseInt(otherRows.promobasic || 0) +
-      parseInt(otherRows.slbasic || 0) +
-      parseInt(otherRows.othbasic || 0);
-    sums.da +=
-      parseInt(otherRows.aasda || 0) +
-      parseInt(otherRows.promoda || 0) +
-      parseInt(otherRows.slda || 0) +
-      parseInt(otherRows.othda || 0);
-    sums.hra +=
-      parseInt(otherRows.aashra || 0) +
-      parseInt(otherRows.promohra || 0) +
-      parseInt(otherRows.slhra || 0) +
-      parseInt(otherRows.othhra || 0);
-
-    // Calculate gross explicitly only once
-    sums.gross +=
-      parseInt(otherRows.aasbasic || 0) +
-      parseInt(otherRows.promobasic || 0) +
-      parseInt(otherRows.slbasic || 0) +
-      parseInt(otherRows.othbasic || 0) +
-      parseInt(otherRows.aasda || 0) +
-      parseInt(otherRows.promoda || 0) +
-      parseInt(otherRows.slda || 0) +
-      parseInt(otherRows.othda || 0) +
-      parseInt(otherRows.aashra || 0) +
-      parseInt(otherRows.promohra || 0) +
-      parseInt(otherRows.slhra || 0) +
-      parseInt(otherRows.othhra || 0);
-
-    // Calculate net explicitly (gross - total deductions)
-    sums.net +=
-      parseInt(otherRows.aasbasic || 0) +
-      parseInt(otherRows.promobasic || 0) +
-      parseInt(otherRows.slbasic || 0) +
-      parseInt(otherRows.othbasic || 0) +
-      parseInt(otherRows.aasda || 0) +
-      parseInt(otherRows.promoda || 0) +
-      parseInt(otherRows.slda || 0) +
-      parseInt(otherRows.othda || 0) +
-      parseInt(otherRows.aashra || 0) +
-      parseInt(otherRows.promohra || 0) +
-      parseInt(otherRows.slhra || 0) +
-      parseInt(otherRows.othhra || 0);
-
-    return sums;
-  };
-
   
-  const sums = calculateSums(rows, otherRows);
+
+  const calculateSumsUsingAPI = async (rows, otherRows) => {
+    try {
+      const response = await fetch("http://localhost:3002/calculate-sums", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rows, otherRows }),
+      });
+  
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+  
+      const sums = await response.json();
+      return sums;
+    } catch (error) {
+      console.error("Error calculating sums using API:", error);
+      return null; 
+    }
+  };
+  
+  
   // Render loading spinner
   if (loading) {
     return (
@@ -707,6 +636,7 @@ const getFinancialYearMonths = () => {
               </TableCell>
             </TableRow>
           </TableBody>
+          <tfoot>
           <TableRow style={{ height: "120px", border: "none" }}>
             <TableCell
               colSpan={11}
@@ -731,6 +661,7 @@ const getFinancialYearMonths = () => {
               Signature of the DDO
             </TableCell>
           </TableRow>
+          </tfoot>
         </Table>
       </TableContainer>
 

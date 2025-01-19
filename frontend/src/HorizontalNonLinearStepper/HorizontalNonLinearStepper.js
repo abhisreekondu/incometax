@@ -42,10 +42,15 @@ export default function HorizontalNonLinearStepper() {
   const [showSalaryTable, setShowSalaryTable] = useState(false); // State to control rendering of the salary table
   const [salaryData, setSalaryData] = useState(null); 
   useEffect(() => {
-    if (location.state && location.state.formData) {
-      setFormData(location.state.formData); // Set the form data from the previous state
+    const savedFormData = localStorage.getItem("formData");
+  
+    if (savedFormData) {
+      setFormData(JSON.parse(savedFormData)); // Restore form data from localStorage
+    } else if (location.state && location.state.formData) {
+      setFormData(location.state.formData); // Restore form data from location.state
     }
   }, [location.state]);
+  
  
 
   const totalSteps = () => steps.length;
@@ -66,7 +71,8 @@ export default function HorizontalNonLinearStepper() {
 
   const handleCalculate = () => {
     console.log('Final form data:', formData);
-
+    // Save formData to localStorage
+    localStorage.setItem("formData", JSON.stringify(formData));
     // Send formData to the server
     fetch('http://localhost:3002/submit-salary-data', {
       method: 'POST',
@@ -91,11 +97,17 @@ export default function HorizontalNonLinearStepper() {
   };
 
   const handleFormUpdate = (stepKey, data) => {
-    setFormData((prevData) => ({
-      ...prevData,
+    const updatedFormData = {
+      ...formData,
       [stepKey]: data,
-    }));
+    };
+  
+    setFormData(updatedFormData);
+  
+    // Save the updated form data to localStorage
+    localStorage.setItem("formData", JSON.stringify(updatedFormData));
   };
+  
 
   const renderStepContent = (stepKey) => {
     switch (stepKey) {

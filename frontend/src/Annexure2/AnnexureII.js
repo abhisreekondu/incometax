@@ -24,8 +24,12 @@ export const AnnexureIItable = () => {
     livingin: "",
   });
 
-  const location = useLocation(); // Access the state passed from the form
+ // Access the state passed from the form
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const [sums, setSums] = useState(new Map());
+  const location = useLocation();
+
 
   const handletable = () => {
     navigate("/table", { state: location.state }); // Navigate back to the form with previous data
@@ -78,12 +82,16 @@ export const AnnexureIItable = () => {
     }
   };
 
+
+   
+
   useEffect(() => {
     const fetchSalaryData = async () => {
       try {
-        const [salaryResponse, formResponse] = await Promise.all([
+        const [salaryResponse, formResponse,totalsums] = await Promise.all([
           fetch("http://localhost:3002/get-salary-data"), // Fetch salary data
-          fetch("http://localhost:3002/get-form-data"), // Fetch form data
+          fetch("http://localhost:3002/get-form-data"),
+          fetch("http://localhost:3002//calculate-sums")
         ]);
 
         if (!salaryResponse.ok) {
@@ -95,7 +103,7 @@ export const AnnexureIItable = () => {
 
         const salaryData = await salaryResponse.json();
         const formData = await formResponse.json();
-
+        const totalsumdata=await totalsums.json()
         setDetails({
           empname: formData.personalDetails.employeeName || "",
           age: formData.personalDetails.age || "",
@@ -105,6 +113,7 @@ export const AnnexureIItable = () => {
           pan: formData.personalDetails.panNumber,
           treasuryid: formData.personalDetails.employeeId,
           livingin: formData.payParticulars.housetype,
+          
         });
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -203,12 +212,14 @@ export const AnnexureIItable = () => {
           </TableHead>
 
           <TableBody>
-            <TableRow>
-              <TableCell>1</TableCell>
-              <TableCell colSpan={3}>Gross Salary</TableCell>
-              <TableCell >Rs.</TableCell>
-              <TableCell colSpan={2}></TableCell>
-            </TableRow>
+          {Array.from(sums.entries()).map(([key, value], index) => (
+              <TableRow key={index}>
+                <TableCell sx={{ width: '5%' }}>{index + 1}</TableCell>
+                <TableCell colSpan={3}>{key}</TableCell> {/* Displaying the key */}
+                <TableCell sx={{ width: '5%' }}>Rs.</TableCell>
+                <TableCell colSpan={2}>{value}</TableCell> {/* Displaying the value */}
+              </TableRow>
+            ))}
           </TableBody>
         </Table>
       </TableContainer>
