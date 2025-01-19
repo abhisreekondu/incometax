@@ -295,6 +295,7 @@ const SalaryTable = () => {
 
     return sums;
   };
+
   
   const sums = calculateSums(rows, otherRows);
   // Render loading spinner
