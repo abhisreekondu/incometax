@@ -4,6 +4,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepButton from '@mui/material/StepButton';
 import Button from '@mui/material/Button';
+import { Typography } from '@mui/material';
 import Employeepersonaldetails from '../components/Employeepersonaldetails/Employeepersonaldetails';
 import Employeepayparticulars from '../components/Employeepayparticulars/Employeepayparticulars';
 import Allowances from '../components/Allowances(monthly)/Allowances';
@@ -12,125 +13,125 @@ import Adavancetax from '../components/Advancetaxpayments/Advancetax';
 import DDOdetails from '../components/DDOdetails/DDOdetails';
 import Salarydeductions from '../components/Salarydeductions/Salarydeductions';
 import SalaryTable from '../Table/SalaryTable';
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import useFormStore from '../store/formStore';
+import useSalaryDataStore from '../store/salaryDataStore';
 
 export default function HorizontalNonLinearStepper() {
-  const [activeStep, setActiveStep] = useState(0);
+  const [activeStepKey, setActiveStepKey] = useState('employeepersonaldetails');
   const formData = useFormStore((state) => state.formData);
   const setFormData = useFormStore((state) => state.setFormData);
+  const salaryData = useSalaryDataStore((state) => state.salaryData);
+  const setSalaryData = useSalaryDataStore((state) => state.setSalaryData);
   const navigate = useNavigate();
-  const location = useLocation();
   const [showSalaryTable, setShowSalaryTable] = useState(false);
-  const [salaryData, setSalaryData] = useState(null); 
-  const steps = [
-    {
-      key: 'employeepersonaldetails',
-      component: <Employeepersonaldetails data={formData.personalDetails} onUpdate={(data) => handleFormUpdate('personalDetails', data)} />
+  const currentDate = new Date();
+  const currentYear = currentDate.getFullYear();
+  const financialYear = `FY ${currentYear-1} - ${currentYear}`;
+
+  // Steps for the form navigation
+  const steps = {
+    employeepersonaldetails: {
+      prev: null,
+      component: <Employeepersonaldetails data={formData.personalDetails} onUpdate={(data) => handleFormUpdate('personalDetails', data)} />,
+      next: 'employeepayparticulars',
     },
-    {
-      key: 'employeepayparticulars',
-      component: <Employeepayparticulars data={formData.payParticulars} onUpdate={(data) => handleFormUpdate('payParticulars', data)} />
+    employeepayparticulars: {
+      prev: 'employeepersonaldetails',
+      component: <Employeepayparticulars data={formData.payParticulars} onUpdate={(data) => handleFormUpdate('payParticulars', data)} />,
+      next: 'allowances',
     },
-    {
-      key: 'allowances',
-      component: <Allowances data={formData.allowances} onUpdate={(data) => handleFormUpdate('allowances', data)} />
+    allowances: {
+      prev: 'employeepayparticulars',
+      component: <Allowances data={formData.allowances} onUpdate={(data) => handleFormUpdate('allowances', data)} />,
+      next: 'anyotherarrears',
     },
-    {
-      key: 'anyotherarrears',
-      component: <Anyotherarrears data={formData.arrears} onUpdate={(data) => handleFormUpdate('arrears', data)} />
+    anyotherarrears: {
+      prev: 'allowances',
+      component: <Anyotherarrears data={formData.arrears} onUpdate={(data) => handleFormUpdate('arrears', data)} />,
+      next: 'advancetax'
     },
-    {
-      key: 'advancetax',
-      component: <Adavancetax data={formData.advanceTax} onUpdate={(data) => handleFormUpdate('advanceTax', data)} />
+    advancetax: {
+      prev: 'anyotherarrears',
+      component: <Adavancetax data={formData.advanceTax} onUpdate={(data) => handleFormUpdate('advanceTax', data)} />,
+      next: 'ddodetails',
     },
-    {
-      key: 'ddodetails',
-      component: <DDOdetails data={formData.ddoDetails} onUpdate={(data) => handleFormUpdate('ddoDetails', data)} />
+    ddodetails: {
+      prev: 'advancetax',
+      component: <DDOdetails data={formData.ddoDetails} onUpdate={(data) => handleFormUpdate('ddoDetails', data)} />,
+      next: 'salarydeductions',
     },
-    {
-      key: 'salarydeductions',
-      component: <Salarydeductions data={formData.salaryDeductions} onUpdate={(data) => handleFormUpdate('salaryDeductions', data)} />
-    },
-  ];
-  useEffect(() => {
-    const savedFormData = localStorage.getItem("formData");
-  
-    if (savedFormData) {
-      setFormData(JSON.parse(savedFormData));
-    } else if (location.state && location.state.formData) {
-      setFormData(location.state.formData);
+    salarydeductions: {
+      prev: 'ddodetails',
+      component: <Salarydeductions data={formData.salaryDeductions} onUpdate={(data) => handleFormUpdate('salaryDeductions', data)} />,
+      next: null,
     }
-  }, [location.state]);
-  
- 
+  };
 
-  const totalSteps = () => steps.length;
-
-  const isLastStep = () => activeStep === totalSteps() - 1;
+  const isFirstStep = () => steps[activeStepKey] === 'employeepersonaldetails';
+  const isLastStep = () => steps[activeStepKey] === 'salarydeductions';
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => Math.min(prevActiveStep + 1, totalSteps() - 1));
+    const nextStep = steps[activeStepKey]?.next;
+    if (nextStep) {
+      setActiveStepKey(nextStep);
+    }
   };
-
+  
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => Math.max(prevActiveStep - 1, 0));
+    const prevStep = steps[activeStepKey]?.prev;
+    if (prevStep) {
+      setActiveStepKey(prevStep);
+    }
   };
-
-  const handleStep = (step) => {
-    setActiveStep(step);
-  };
-
-  const handleCalculate = () => {
-    console.log('Final form data:', formData);
-    // Save formData to localStorage
-    localStorage.setItem("formData", JSON.stringify(formData));
-    // Send formData to the server
-    fetch('http://localhost:3002/submit-salary-data', {
-      method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(formData), // Pass the form data
-  credentials: 'include',
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log('Server Response:', data);
-        setSalaryData(data); // Save the salary data for rendering the table
-        setShowSalaryTable(true); // Switch to salary table view
-      })
-      .catch((error) => {
-        console.error('Error submitting form data:', error);
-      });
-
-
-      navigate("/table", { state: { formData } }); 
+  
+  const handleStep = (key) => {
+    if (steps[key]) {
+      setActiveStepKey(key);
+    }
   };
 
   const handleFormUpdate = (stepKey, data) => {
     setFormData({
       [stepKey]: data,
     });
-  }; 
-  
-  const getComponentByKey = (key) => {
-    const step = steps.find((step) => step.key === key);
-    return step ? step.component : null;
   };
-  
+
+  const handleCalculate = async () => {
+    console.log('Final form data:', formData);
+
+    try {
+      const response = await fetch('http://localhost:3002/submit-salary-data', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+        credentials: 'include',
+      });
+
+      const data = await response.json();
+      console.log('Server Response:', data);
+
+      setSalaryData(data);
+      setShowSalaryTable(true);
+
+      navigate("/table");
+    } catch (error) {
+      console.error('Error submitting form data:', error);
+    }
+  };
+
   // Conditionally render either the Stepper or the Salary Table
   if (showSalaryTable) {
     return <SalaryTable data={salaryData} />;
   }
 
-  const currentDate = new Date();
-  const currentYear = currentDate.getFullYear();
-  const financialYear = `FY ${currentYear-1} - ${currentYear}`;
-
   return  (
     <>
-    <h1  className="alert alert-success m-5 text-center" >Employees Income Tax Online Calculation {financialYear}</h1>
+    <Typography variant="h4" align="center" gutterBottom className="alert alert-success m-5">
+      Employees Income Tax Online Calculation {financialYear}
+    </Typography>
     <Box sx={{ width: '100%' }}>
       <Box
         sx={{
@@ -143,10 +144,10 @@ export default function HorizontalNonLinearStepper() {
           mx: 'auto',
         }}
       >
-        <Stepper nonLinear activeStep={activeStep} sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, justifyContent: 'center' }}>
-          {steps.map((step, index) => (
-            <Step key={step.key}>
-              <StepButton color="inherit" onClick={() => handleStep(index)} />
+        <Stepper nonLinear activeStep={Object.keys(steps).indexOf(activeStepKey)} sx={{ flexWrap: { xs: 'wrap', sm: 'nowrap' }, justifyContent: 'center' }}>
+          {Object.keys(steps).map((key) => (
+            <Step key={key}>
+              <StepButton color="inherit" onClick={() => handleStep(key)} />
             </Step>
           ))}
         </Stepper>
@@ -154,12 +155,12 @@ export default function HorizontalNonLinearStepper() {
 
       <div>
         <Box sx={{ mt: 2, mb: 1, py: 1 }}>
-          {getComponentByKey(steps[activeStep]?.key)}
+          {steps[activeStepKey]?.component || <Typography>Unknown Step</Typography>}
         </Box>
         <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, gap: 2 }}>
           <Button
             color="inherit"
-            disabled={activeStep === 0}
+            disabled={isFirstStep()}
             onClick={handleBack}
             sx={{
               ml: 15,
