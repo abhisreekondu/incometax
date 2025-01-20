@@ -17,37 +17,45 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 import useFormStore from "../store/formStore";
 import useSalaryDataStore from "../store/salaryDataStore";
+import usetotalsumStore from "../store/totalsumsStore";
+
+
 const SalaryTable = () => {
   const [rows, setRows] = useState([]);
   const [otherRows, setOtherRows] = useState({}); // Define otherRows state
   const [loading, setLoading] = useState(true); // Loading state
   const [error, setError] = useState(null);
-  const [sums, setSums] = useState(null);
+ 
   const formData = useFormStore((state) => state.formData);
   const salaryData = useSalaryDataStore((state) => state.salaryData);
   const navigate = useNavigate();
+  const sums = usetotalsumStore((state) => state.sums);
+const setSums = usetotalsumStore((state) => state.setSums);
+
 
   useEffect(() => {
-    setLoading(true); 
-    setError(null);
-    const fetchSums = async () => {
+    const fetchSums =  async() => {
+      setLoading(true); // Start loading
+      setError(null); // Reset error before the new fetch attempt
+  
       try {
         const computedSums = await calculateSumsUsingAPI(rows, otherRows);
-       if(computedSums) setSums(computedSums);
-        else {
+        if (computedSums) {
+          setSums(computedSums); // Update sums if successful
+        } else {
           setError("Failed to fetch sums from the server."); // Set an error message if API returns null
         }
       } catch (error) {
-        setError("An error occurred while fetching sums."); 
+        setError("An error occurred while fetching sums."); // Handle unexpected errors
         console.error("Error in fetchSums:", error);
-      }
-      finally {
+      } finally {
         setLoading(false); // End loading
       }
     };
-
+  
     fetchSums();
   }, [rows, otherRows]);
+  
 
   // Function to calculate financial year months dynamically
   const getFinancialYearMonths = () => {
@@ -83,6 +91,7 @@ const SalaryTable = () => {
     navigate("/"); // Navigate back to the form with previous data
   };
   const handleAnnexure = () => {
+  
     navigate("/annexureii"); // Navigate back to the form with previous data
   };
   const handleDownload = async () => {
@@ -102,15 +111,16 @@ const SalaryTable = () => {
       const pdfWidth = pdf.internal.pageSize.getWidth(); // Width of the PDF
       const pdfHeight = pdf.internal.pageSize.getHeight(); // Height of the PDF
 
+      const horizontalMargin = 10;
       // Set the image width to the PDF page width
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
 
-      const scaleFactor = pdfWidth / canvasWidth; // Scale to fit the width
-
-      let scaledWidth = pdfWidth; // Set to PDF page width
-      let scaledHeight = canvasHeight * scaleFactor; // Maintain aspect ratio
-
+      const scaledWidth = pdfWidth - 2 * horizontalMargin; 
+      const scaleFactor = scaledWidth / canvasWidth; 
+      const scaledHeight = canvasHeight * scaleFactor;
+      const x = horizontalMargin; 
+      const y = (pdfHeight - scaledHeight) / 2;
       // Check if the scaled height exceeds the page height
       if (scaledHeight > pdfHeight) {
         const heightScaleFactor = pdfHeight / scaledHeight;
@@ -118,11 +128,6 @@ const SalaryTable = () => {
         scaledWidth = scaledWidth * heightScaleFactor; // Adjust width to maintain aspect ratio
       }
 
-      // Calculate the x and y positions to center the image
-      const x = (pdfWidth - scaledWidth) / 2; // Center horizontally
-      const y = (pdfHeight - scaledHeight) / 2; // Center vertically
-
-      // Add the scaled image to the PDF
       pdf.addImage(imgData, "PNG", x, y, scaledWidth, scaledHeight);
 
       // Save the PDF
@@ -204,11 +209,14 @@ const SalaryTable = () => {
       othhra: formData.arrears.arrearhra || 0,
       empname:
         formData.personalDetails.employeeName ||
-        "mention name in personal details",
+        "",
       empid:
-        formData.personalDetails.employeeId || "mention id in personal details",
+        formData.personalDetails.employeeId || "",
     }
   };
+
+
+
 
   useEffect(() => {
     if(salaryData === null || salaryData.basesalary === null) { 
@@ -242,35 +250,35 @@ const SalaryTable = () => {
     }
   };
 
-  // // Render loading spinner
-  // if (loading) {
-  //   return (
-  //     <Box
-  //       display="flex"
-  //       justifyContent="center"
-  //       alignItems="center"
-  //       height="100vh"
-  //     >
-  //       <CircularProgress />
-  //     </Box>
-  //   );
-  // }
+  // Render loading spinner
+  if (loading) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    );
+  }
 
-  // // Render error message
-  // if (error) {
-  //   return (
-  //     <Box
-  //       display="flex"
-  //       justifyContent="center"
-  //       alignItems="center"
-  //       height="100vh"
-  //     >
-  //       <Typography variant="h6" color="error">
-  //         {error}
-  //       </Typography>
-  //     </Box>
-  //   );
-  // }
+  // Render error message
+  if (error) {
+    return (
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      </Box>
+    );
+  }
 
   // Render the salary table
   return (
@@ -278,9 +286,8 @@ const SalaryTable = () => {
       <TableContainer
         component={Paper}
         style={{
-          width: "97%",
+          width: "98%",
           margin: "0 auto",
-          height: "90%",
           overflowX: "auto",
         }}
       >
@@ -291,7 +298,8 @@ const SalaryTable = () => {
           sx={{
             borderCollapse: "collapse", // Ensures no gaps between borders
             "& td, & th": {
-              border: "1px solid black", // Apply thick border to all cells
+              border: "1px solid black",
+              padding: "7px",  
               textAlign: "center",
             },
           }}
@@ -668,7 +676,7 @@ const SalaryTable = () => {
 
       <Button
         variant="contained"
-        style={{ marginTop: "20px", marginLeft: "10px" }}
+        style={{ marginTop: "20px", marginLeft: "10px",marginBottom:"10px" }}
         onClick={handleEdit}
       >
         Edit Form
@@ -676,7 +684,7 @@ const SalaryTable = () => {
 
       <Button
         variant="contained"
-        style={{ marginTop: "20px", marginLeft: "10px" }}
+        style={{ marginTop: "20px", marginLeft: "10px" ,marginBottom:"10px"}}
         onClick={handleDownload}
       >
         Download
@@ -684,7 +692,7 @@ const SalaryTable = () => {
 
       <Button
         variant="contained"
-        style={{ marginTop: "20px", marginLeft: "10px" }}
+        style={{ marginTop: "20px", marginLeft: "10px", marginBottom:"10px"}}
         onClick={handleAnnexure}
       >
         Annexue-II
