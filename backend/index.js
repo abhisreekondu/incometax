@@ -199,8 +199,5 @@ app.post("/calculate-sums", (req, res) => {
 }
 )
 
-
-
-
 // Start the server
 app.listen(3002, () => console.log("Server running on http://localhost:3002"));
