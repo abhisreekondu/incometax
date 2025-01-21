@@ -18,7 +18,7 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
 const AnnexureIItable = () => {
-  const [details, setDetails] = useState(null); // State for employee details
+  const [details, setDetails] = useState([]); 
   const formData = useFormStore((state) => state.formData);
   const salaryData = useSalaryDataStore((state) => state.salaryData);
   const sums = usetotalsumStore((state) => state.sums);
@@ -81,6 +81,8 @@ const AnnexureIItable = () => {
 
   // Extract employee details
   const getDetails = () => {
+    const netincsal = (sums.gross || 0) - 75000; 
+    const muloften = Math.round(netincsal / 10) * 10; 
     return {
       empname: formData?.personalDetails?.employeeName || "N/A",
       age: formData?.personalDetails?.age || "N/A",
@@ -90,18 +92,26 @@ const AnnexureIItable = () => {
       pan: formData?.personalDetails?.panNumber || "N/A",
       treasuryid: formData?.personalDetails?.employeeId || "N/A",
       livingin: formData?.payParticulars?.housetype || "N/A",
-      netincsal:sums.gross-75000||0,
-      
-
+      netincsal, // Use the calculated value
+      gross: sums.gross || 0,
+      hra: sums.hra || 0,
+      ewfswf: sums.ewfswf || 0,
+      ehf: sums.ehf || 0,
+      apgli: sums.apgli || 0,
+      gis: sums.gis || 0,
+      fee: formData?.payParticulars?.twochildrenfee || 0,
+      muloften, // Use the pre-calculated muloften
     };
   };
+  
 
   useEffect(() => {
     // Redirect to the form page if salaryData is not available
     if (!salaryData || !salaryData.basesalary) {
       navigate("/");
     } else {
-      setDetails(getDetails());
+    
+      setDetails( getDetails());
     }
   }, []);
 
@@ -115,7 +125,7 @@ const AnnexureIItable = () => {
         id="
     page-content"
         style={{
-          width: "97%",
+          width: "80%",
           margin: "0 auto",
         }}
       >
@@ -135,7 +145,7 @@ const AnnexureIItable = () => {
               borderCollapse: "collapse",
               "& td, & th": {
                 border: "1px solid black",
-                padding: "8px",
+                padding: "5px",
               },
             }}
           >
@@ -209,7 +219,7 @@ const AnnexureIItable = () => {
               borderCollapse: "collapse",
               "& td, & th": {
                 border: "1px solid black",
-                padding: "8px", // Ensure consistent padding
+                padding: "3px", // Ensure consistent padding
               },
             }}
           >
@@ -223,7 +233,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
 
-                <TableCell colSpan={2} align="right">{sums.gross}</TableCell>
+                <TableCell colSpan={2} align="right">{details.gross}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -240,8 +250,8 @@ const AnnexureIItable = () => {
                   Actual HRA received
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{sums.hra}</TableCell>
-                <TableCell align="right">{sums.hra}</TableCell>
+                <TableCell align="right">{details.hra}</TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell></TableCell>
@@ -262,7 +272,7 @@ const AnnexureIItable = () => {
                   40% of Salary (Salary means Basic Pay + D.A)
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">0</TableCell>
+                <TableCell align="right"></TableCell>
                 <TableCell align="right">0</TableCell>
               </TableRow>
               <TableRow>
@@ -274,7 +284,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell align="right"> </TableCell>
-                <TableCell align="right"> {sums.gross}</TableCell>
+                <TableCell align="right"> {details.gross}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -292,7 +302,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell align="right">0</TableCell>
-                <TableCell align="right">0</TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell></TableCell>
@@ -301,7 +311,7 @@ const AnnexureIItable = () => {
                   Profession Tax U/s 16 (3) B
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{sums.pt}</TableCell>
+                <TableCell align="right">0</TableCell>
                 <TableCell align="right">0</TableCell>
               </TableRow>
               <TableRow>
@@ -313,7 +323,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell align="right">{sums.gross}</TableCell>
+                <TableCell align="right">{details.gross}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -338,7 +348,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right">{sums.gross-75000}</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="right">{details.netincsal}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell>{index++}</TableCell>
@@ -347,7 +357,7 @@ const AnnexureIItable = () => {
                   Income from Other Source
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{formData.payParticulars.incomefromothersources}</TableCell>
+                <TableCell align="right">0</TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
@@ -357,20 +367,18 @@ const AnnexureIItable = () => {
                   Employer Contribution Towards NPS U/s 80CCD2
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">0</TableCell>
+                <TableCell align="right"></TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
-                <TableCell></TableCell>
-                <TableCell sx={{ width: "1%" }}>c)</TableCell>
-                <TableCell colSpan={2} sx={{ width: "60%" }}>
+                <TableCell></TableCell>      
+                <TableCell colSpan={3} sx={{ width: "60%" }}>
                   Net Income from Salary (7+8)
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell align="right"></TableCell>
-                <TableCell align="right">{sums.gross-75000+formData.payParticulars.incomefromothersources}</TableCell>
+                <TableCell align="right">{details.netincsal}</TableCell>
               </TableRow>
-
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
                   {index++}
@@ -386,7 +394,7 @@ const AnnexureIItable = () => {
                   E.W.F. / S.W.F / CMRF
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{sums.ewfswf}</TableCell>
+                <TableCell align="right">{details.ewfswf}</TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
@@ -427,7 +435,7 @@ const AnnexureIItable = () => {
                   Employees Health Cards Premium in AP
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{sums.ehf}</TableCell>
+                <TableCell align="right">{details.ehf}</TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
@@ -446,7 +454,7 @@ const AnnexureIItable = () => {
                   Total Deductions
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{sums.ehf+sums.ewfswf}</TableCell>
+                <TableCell align="right">0</TableCell>
                 <TableCell align="right">0</TableCell>
               </TableRow>
               <TableRow>
@@ -458,7 +466,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell align="right">{sums.gross-75000+formData.payParticulars.incomefromothersources}</TableCell>
+                <TableCell align="right">{details.netincsal}</TableCell>
               </TableRow>
 
               <TableRow>
@@ -488,7 +496,7 @@ const AnnexureIItable = () => {
                   APGLI
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{sums.apgli}</TableCell>
+                <TableCell align="right">{details.apgli}</TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
@@ -498,7 +506,7 @@ const AnnexureIItable = () => {
                   GIS
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{sums.gis}</TableCell>
+                <TableCell align="right">{details.gis}</TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
@@ -520,7 +528,7 @@ const AnnexureIItable = () => {
                   Tuition Fee for Two children
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">0</TableCell>
+                <TableCell align="right">{details.fee}</TableCell>
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
@@ -530,8 +538,8 @@ const AnnexureIItable = () => {
                   Total Savings (Deductions) u/s 80C, 80CCC, 80CCD
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right"></TableCell>
-                <TableCell align="right"></TableCell>
+                <TableCell align="right">0</TableCell>
+                <TableCell align="right">0</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -543,7 +551,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right">0</TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right"></TableCell>
+                <TableCell  align="right">0</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -554,7 +562,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right"></TableCell>
+                <TableCell  align="right">{details.netincsal}</TableCell>
               </TableRow>
 
               <TableRow>
@@ -566,14 +574,14 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right"></TableCell>
+                <TableCell  align="right">{details.muloften}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
                   {index++}
                 </TableCell>
                 <TableCell colSpan={6} sx={{ width: "95%" }}>
-                  Tax on Net Income (i.e on Rs.1198770)
+                  Tax on Net Income (i.e on {details.muloften})
                 </TableCell>
               </TableRow>
 
