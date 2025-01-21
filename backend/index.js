@@ -114,6 +114,7 @@ app.post("/calculate-sums", (req, res) => {
     others: 0,
     gross: 0,
     cps: 0,
+    pf:0,
     apgli: 0,
     gis: 0,
     pt: 0,
@@ -135,7 +136,8 @@ app.post("/calculate-sums", (req, res) => {
       sums.cca += parseInt(row.cca || 0);
       sums.pha += parseInt(row.pha || 0);
       sums.others += parseInt(row.others || 0);
-      sums.gross += parseInt(row.gross || 0); // Ensure no double counting here
+      sums.gross += parseInt(row.gross || 0); 
+      sums.pf += parseInt(row.pf || 0);
       sums.cps += parseInt(row.cps || 0);
       sums.apgli += parseInt(row.apgli || 0);
       sums.gis += parseInt(row.gis || 0);

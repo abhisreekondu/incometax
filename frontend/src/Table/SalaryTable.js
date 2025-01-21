@@ -157,6 +157,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
           parseInt(formData.allowances.cca || 0) +
           parseInt(formData.allowances.pha || 0) +
           parseInt(formData.allowances.otherallowance || 0) || 0,
+      pf:formData.salaryDeductions.pfamt||0,
       cps: salaryData.cps[month] || 0,
       apgli: salaryData.apgli[month] || 0,
       gis: salaryData.gis[month] || 0,
@@ -224,6 +225,8 @@ const setSums = usetotalsumStore((state) => state.setSums);
     } else {
       const tableData = getTableData();
       const otherData = getOtherData();
+      console.log(tableData);
+      console.log(otherData);
       setRows(tableData);
       setOtherRows(otherData);
     }
@@ -369,7 +372,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
                 Gross
               </TableCell>
               <TableCell align="right" style={{ width: "0.5%" }}>
-                CPS
+              {formData.salaryDeductions.pensiontype === "CPS" ? "CPS" : "GPF"}
               </TableCell>
               <TableCell align="right" style={{ width: "0.5%" }}>
                 APGLI
@@ -423,7 +426,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
                 <TableCell align="right">{row.pha}</TableCell>
                 <TableCell align="right">{row.others}</TableCell>
                 <TableCell align="right">{row.gross}</TableCell>
-                <TableCell align="right">{row.cps}</TableCell>
+                <TableCell align="right"> {formData.salaryDeductions.pensiontype === "CPS" ? row.cps : row.pf}</TableCell>
                 <TableCell align="right">{row.apgli}</TableCell>
                 <TableCell align="right">{row.gis}</TableCell>
                 <TableCell align="right">200</TableCell>
@@ -614,7 +617,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
                 {sums.gross}
               </TableCell>
               <TableCell align="right" style={{ fontWeight: "bold" }}>
-                {sums.cps}
+              {formData.salaryDeductions.pensiontype === "CPS" ? sums.cps : sums.pf}
               </TableCell>
               <TableCell align="right" style={{ fontWeight: "bold" }}>
                 {sums.apgli}
