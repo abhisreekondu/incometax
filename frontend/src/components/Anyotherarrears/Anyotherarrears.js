@@ -4,9 +4,9 @@ import BasicTextField from "../BasicTextField";
 
 const Anyotherarrears = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
-    arrearpay: 0,
-    arrearda: 0,
-    arrearhra: 0,
+    arrearpay: data.arrearpay||0,
+    arrearda: data.arrearda||0,
+    arrearhra: data.arrearhra||0,
     ...DataTransfer,
   });
 
