@@ -264,7 +264,7 @@ const Salarydeductions = ({ data = {}, onUpdate }) => {
         </div>
         <div className="col-12 col-sm-6 col-md-4">
           <BasicTextField
-            label="Enter SWF (Mar-24)"
+            label="Enter SWF (Dec-24)"
             name="swf"
             value={formData.swf}
             type="number"
