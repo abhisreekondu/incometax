@@ -3,7 +3,7 @@ const calculateValue = (ewf, swf, month) => {
     return parseInt(ewf); // Use only ewf for Mar-24
   }
   if (month === 'Sep-24') {
-    return 707; // Fixed value for Sep-24
+    return 841; // Fixed value for Sep-24
   }
   if (month === 'Dec-24') {
     return parseInt(swf); // Use only swf for Dec-24
