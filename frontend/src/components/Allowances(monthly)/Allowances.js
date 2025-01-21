@@ -4,7 +4,7 @@ import BasicTextField from "../BasicTextField";
 
 const Allowances = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
-    hra: 10,
+    hra: "",
     hrachange: "",
     hraper: "",
     hramon: "",
