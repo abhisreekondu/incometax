@@ -15,6 +15,7 @@ import Salarydeductions from '../components/Salarydeductions/Salarydeductions';
 import { useNavigate } from "react-router-dom";
 import useFormStore from '../store/formStore';
 import useSalaryDataStore from '../store/salaryDataStore';
+import Houseadd from "../components/Houseadd/Houseadd"
 
 export default function HorizontalNonLinearStepper() {
   const [activeStepKey, setActiveStepKey] = useState('employeepersonaldetails');
@@ -56,14 +57,21 @@ export default function HorizontalNonLinearStepper() {
     ddodetails: {
       prev: 'advancetax',
       component: <DDOdetails data={formData.ddoDetails} onUpdate={(data) => handleFormUpdate('ddoDetails', data)} />,
-      next: 'salarydeductions',
+      next: 'houseadd',
+    },
+    houseadd:{
+      prev:'ddodetails',
+      component:<Houseadd data={formData.houseAdd} onUpdate={(data) => handleFormUpdate('houseAdd', data)} />,
+      next:'salarydeductions'
     },
     salarydeductions: {
-      prev: 'ddodetails',
+      prev: 'houseadd',
       component: <Salarydeductions data={formData.salaryDeductions} onUpdate={(data) => handleFormUpdate('salaryDeductions', data)} />,
       next: null,
     }
   };
+
+  
 
   const isFirstStep = () => activeStepKey === 'employeepersonaldetails';
   const isLastStep = () => activeStepKey === 'salarydeductions';

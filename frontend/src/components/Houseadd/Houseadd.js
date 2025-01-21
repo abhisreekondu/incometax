@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
 
-const Houseadd = () => {
+const Houseadd = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
-    ownername: "",
-    address: "",
-    ownerpan: "",
-    houserent: "",
+    ownername: data.ownername||"",
+    address: data.address||"",
+    ownerpan:data.ownerpan||"", 
+    houserent: data.houserent||"",
   });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    onUpdate(updatedFormData);
   };
 
   return (
