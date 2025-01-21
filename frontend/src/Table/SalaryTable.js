@@ -289,7 +289,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
       <TableContainer
         component={Paper}
         style={{
-          width: "98%",
+          width: "83%",
           margin: "0 auto",
           overflowX: "auto",
         }}
@@ -299,7 +299,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
           aria-label="salary table"
           id="page-content"
           sx={{
-            borderCollapse: "collapse", // Ensures no gaps between borders
+            borderCollapse: "collapse",
             "& td, & th": {
               border: "1px solid black",
               padding: "7px",  
@@ -334,13 +334,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
                 Sno
               </TableCell>
               <TableCell
-                style={{
-                  position: "sticky",
-                  left: 0,
-                  background: "#fff",
-                  zIndex: 2,
-                  width: "0.2%",
-                }}
+               style={{ width: "0.2%" }}
               >
                 Month
               </TableCell>
@@ -408,12 +402,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
               <TableRow key={row.month}>
                 <TableCell align="right">{row.sno}</TableCell>
                 <TableCell
-                  style={{
-                    position: "sticky",
-                    left: 0,
-                    background: "#fff",
-                    zIndex: 1,
-                  }}
+                  
                 >
                   {row.month}
                 </TableCell>
@@ -698,7 +687,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
         style={{ marginTop: "20px", marginLeft: "10px", marginBottom:"10px"}}
         onClick={handleAnnexure}
       >
-        Annexue-II
+        Annexure-II
       </Button>
     </div>
   );
