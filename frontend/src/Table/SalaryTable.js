@@ -94,6 +94,10 @@ const setSums = usetotalsumStore((state) => state.setSums);
   
     navigate("/annexureii"); // Navigate back to the form with previous data
   };
+  const handleForm16 = () => {
+  
+    navigate("/form-16"); // Navigate back to the form with previous data
+  };
   const handleDownload = async () => {
     const element = document.getElementById("page-content"); // Target the element
     try {
@@ -688,6 +692,13 @@ const setSums = usetotalsumStore((state) => state.setSums);
         onClick={handleAnnexure}
       >
         Annexure-II
+      </Button>
+      <Button
+        variant="contained"
+        style={{ marginTop: "20px", marginLeft: "10px", marginBottom:"10px"}}
+        onClick={handleForm16}
+      >
+        Form-16
       </Button>
     </div>
   );
