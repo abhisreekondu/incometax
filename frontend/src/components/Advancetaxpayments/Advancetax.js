@@ -1,29 +1,36 @@
 import React, { useState } from "react";
 import BasicTextField from "../BasicTextField";
+import { Months } from "../../consts/Months";
 
 const Adavancetax = ({ data = {}, onUpdate }) => {
-  const [formData, setFormData] = useState({
-    "Mar-24": 0,
-    "Apr-24": 0,
-    "May-24": 0,
-    "Jun-24": 0,
-    "Jul-24": 0,
-    "Aug-24": 0,
-    "Sep-24": 0,
-    "Oct-24": 0,
-    "Nov-24": 0,
-    "Dec-24": 0,
-    "Jan-25": 0,
-    "Feb-25": 0,
-    ...data, // Merge incoming data with default values
-  });
+  const months = Months();
+
+  // Initialize state with default values for all months
+  const [formData, setFormData] = useState(
+    months.reduce((acc, month) => {
+      acc[month] = 0; // Default value is 0 for each month
+      return acc;
+    }, { ...data }) // Merge incoming data if available
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    const updatedFormData = { ...formData, [name]: value };
+    
+    // Allow empty strings to be temporarily set
+    const updatedValue = value === "" ? "" : Number(value);
+  
+    const updatedFormData = { ...formData, [name]: updatedValue };
     setFormData(updatedFormData);
-    onUpdate(updatedFormData); // Pass updated data to parent
+  
+    // Pass updated data to parent, ensuring to send 0 for empty fields
+    onUpdate(
+      Object.keys(updatedFormData).reduce((acc, key) => {
+        acc[key] = updatedFormData[key] === "" ? 0 : updatedFormData[key];
+        return acc;
+      }, {})
+    );
   };
+  
 
   return (
     <div className="container border p-4 rounded">
