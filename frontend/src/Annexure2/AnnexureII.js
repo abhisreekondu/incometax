@@ -159,7 +159,8 @@ const AnnexureIItable = () => {
   };
   
   
-  
+
+  const values = Object.values(formData.advanceTax);
 
   // Extract employee details
   const getDetails = () => {
@@ -170,7 +171,8 @@ const AnnexureIItable = () => {
     const cess=Math.round(taxoninc*0.04);
     const nettax=taxoninc+cess;
     const cmrforpf=formData.salaryDeductions.pensiontype === "CPS" ? sums.cps : sums.pf;
-
+    const totaladvtax= values.reduce((sum, value) => sum + (Number(value) || 0), 0);
+    const totaltax=nettax-totaladvtax;
     return {
       empname: formData?.personalDetails?.employeeName || "N/A",
       age: formData?.personalDetails?.age || "N/A",
@@ -193,11 +195,13 @@ const AnnexureIItable = () => {
       taxDetails,
       cess,
       nettax,
-      cmrforpf
- 
+      cmrforpf,
+      totaladvtax,
+     totaltax,
     };
   };
   
+
 
   useEffect(() => {
     // Redirect to the form page if salaryData is not available
@@ -808,20 +812,20 @@ const AnnexureIItable = () => {
               <TableRow>
                 <TableCell></TableCell>
                 <TableCell colSpan={3} sx={{ width: "60%" }}>
-                  Q1:(7500+7500+7500=22500) Q2: (7500+7500+7500 = 22500)
+                  Q1:({values[0]}+{values[1]}+{values[2]}={values[0]+values[1]+values[2]}) Q2: ({values[3]}+{values[4]}+{values[5]}={values[3]+values[4]+values[5]})
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell rowSpan={2}>Total Advance Tax</TableCell>
-                <TableCell></TableCell>
+                <TableCell  rowSpan={2} align="right">{details.totaladvtax}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell></TableCell>
                 <TableCell colSpan={3} sx={{ width: "60%" }}>
-                  Q3:(7500+7500+7500 = 22500) Q4: (7500+0+0 = 7500)
+                  Q3:({values[6]}+{values[7]}+{values[8]}={values[6]+values[7]+values[8]}) Q4: ({values[9]}+{values[10]}+{values[11]}=={values[9]+values[10]+values[11]})
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
 
-                <TableCell align="right"></TableCell>
+               
               </TableRow>
 
               <TableRow>
@@ -829,11 +833,11 @@ const AnnexureIItable = () => {
                   {index++}
                 </TableCell>
                 <TableCell colSpan={3} sx={{ width: "50%" }}>
-                  Tax to be Paid Amount (18-19)
+                  Tax to be Paid Amount (19-20)
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right"></TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="right">{details.totaltax}</TableCell>
               </TableRow>
               <TableRow style={{ height: "120px", border: "none" }}>
                 <TableCell
