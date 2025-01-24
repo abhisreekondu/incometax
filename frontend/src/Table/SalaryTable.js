@@ -41,6 +41,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
       try {
         const computedSums = await calculateSumsUsingAPI(rows, otherRows);
         if (computedSums) {
+          console.log("Total sums for each column:",computedSums)
           setSums(computedSums); // Update sums if successful
         } else {
           setError("Failed to fetch sums from the server."); // Set an error message if API returns null
