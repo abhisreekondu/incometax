@@ -82,61 +82,77 @@ const AnnexureIItable = () => {
   
     const taxDetails = {
       a: { taxable: 0, tax: 0 }, // Up to 3,00,000
-      b: { taxable: 0, tax: 0 }, // 3,00,001 to 6,00,000
-      c: { taxable: 0, tax: 0 }, // 6,00,001 to 9,00,000
-      d: { taxable: 0, tax: 0 }, // 9,00,001 to 12,00,000
+      b: { taxable: 0, tax: 0 }, // 3,00,001 to 7,00,000
+      c: { taxable: 0, tax: 0 }, // 7,00,001 to 10,00,000
+      d: { taxable: 0, tax: 0 }, // 10,00,001 to 12,00,000
       e: { taxable: 0, tax: 0 }, // 12,00,001 to 15,00,000
       f: { taxable: 0, tax: 0 }, // Above 15,00,000
     };
   
+    // Tax calculation logic
     if (muloften <= 300000) {
-      return taxDetails; // No tax for income up to 3,00,000
-    }
-    if (muloften <= 600000) {
+      taxDetails.a.taxable = muloften;
+      taxDetails.a.tax = 0; // No tax for income up to 3,00,000
+    } else if (muloften <= 700000) {
+      taxDetails.a.taxable = 300000;
+      taxDetails.a.tax = 0;
+  
       taxDetails.b.taxable = muloften - 300000;
-      taxDetails.b.tax = taxDetails.b.taxable * 0.05; // 5%
-    } else if (muloften <= 900000) {
-      taxDetails.b.taxable = 300000;
-      taxDetails.b.tax = taxDetails.b.taxable * 0.05; // Full slabB taxed
+      taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
+    } else if (muloften <= 1000000) {
+      taxDetails.a.taxable = 300000;
+      taxDetails.a.tax = 0;
   
-      taxDetails.c.taxable = muloften - 600000;
-      taxDetails.c.tax = taxDetails.c.taxable * 0.10; // 10%
+      taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
+      taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
+  
+      taxDetails.c.taxable = muloften - 700000;
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
     } else if (muloften <= 1200000) {
-      taxDetails.b.taxable = 300000;
-      taxDetails.b.tax = taxDetails.b.taxable * 0.05;
+      taxDetails.a.taxable = 300000;
+      taxDetails.a.tax = 0;
   
-      taxDetails.c.taxable = 300000;
-      taxDetails.c.tax = taxDetails.c.taxable * 0.10;
+      taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
+      taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
   
-      taxDetails.d.taxable = muloften - 900000;
-      taxDetails.d.tax = taxDetails.d.taxable * 0.15; // 15%
+      taxDetails.c.taxable = 300000; // Full slab for 7,00,001 to 10,00,000
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
+  
+      taxDetails.d.taxable = muloften - 1000000;
+      taxDetails.d.tax = Math.round(taxDetails.d.taxable * 0.15); // 15%
     } else if (muloften <= 1500000) {
-      taxDetails.b.taxable = 300000;
-      taxDetails.b.tax = taxDetails.b.taxable * 0.05;
+      taxDetails.a.taxable = 300000;
+      taxDetails.a.tax = 0;
   
-      taxDetails.c.taxable = 300000;
-      taxDetails.c.tax = taxDetails.c.taxable * 0.10;
+      taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
+      taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
   
-      taxDetails.d.taxable = 300000;
-      taxDetails.d.tax = taxDetails.d.taxable * 0.15;
+      taxDetails.c.taxable = 300000; // Full slab for 7,00,001 to 10,00,000
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
+  
+      taxDetails.d.taxable = 200000; // Full slab for 10,00,001 to 12,00,000
+      taxDetails.d.tax = Math.round(taxDetails.d.taxable * 0.15); // 15%
   
       taxDetails.e.taxable = muloften - 1200000;
-      taxDetails.e.tax = taxDetails.e.taxable * 0.20; // 20%
+      taxDetails.e.tax = Math.round(taxDetails.e.taxable * 0.20); // 20%
     } else {
-      taxDetails.b.taxable = 300000;
-      taxDetails.b.tax = taxDetails.b.taxable * 0.05;
+      taxDetails.a.taxable = 300000;
+      taxDetails.a.tax = 0;
   
-      taxDetails.c.taxable = 300000;
-      taxDetails.c.tax = taxDetails.c.taxable * 0.10;
+      taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
+      taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
   
-      taxDetails.d.taxable = 300000;
-      taxDetails.d.tax = taxDetails.d.taxable * 0.15;
+      taxDetails.c.taxable = 300000; // Full slab for 7,00,001 to 10,00,000
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
   
-      taxDetails.e.taxable = 300000;
-      taxDetails.e.tax = taxDetails.e.taxable * 0.20;
+      taxDetails.d.taxable = 200000; // Full slab for 10,00,001 to 12,00,000
+      taxDetails.d.tax = Math.round(taxDetails.d.taxable * 0.15); // 15%
+  
+      taxDetails.e.taxable = 300000; // Full slab for 12,00,001 to 15,00,000
+      taxDetails.e.tax = Math.round(taxDetails.e.taxable * 0.20); // 20%
   
       taxDetails.f.taxable = muloften - 1500000;
-      taxDetails.f.tax = taxDetails.f.taxable * 0.30; // 30%
+      taxDetails.f.tax = Math.round(taxDetails.f.taxable * 0.30); // 30%
     }
   
     return taxDetails;
@@ -152,6 +168,9 @@ const AnnexureIItable = () => {
     const taxDetails= calculateTaxDetails(muloften)||{}; 
     const taxoninc=taxDetails?.a.tax+taxDetails?.b.tax+taxDetails?.c.tax+taxDetails?.d.tax+taxDetails?.e.tax+taxDetails?.f.tax;
     const cess=Math.round(taxoninc*0.04);
+    const nettax=taxoninc+cess;
+    const cmrforpf=formData.salaryDeductions.pensiontype === "CPS" ? sums.cps : sums.pf;
+
     return {
       empname: formData?.personalDetails?.employeeName || "N/A",
       age: formData?.personalDetails?.age || "N/A",
@@ -173,6 +192,8 @@ const AnnexureIItable = () => {
       taxoninc,
       taxDetails,
       cess,
+      nettax,
+      cmrforpf
  
     };
   };
@@ -383,7 +404,7 @@ const AnnexureIItable = () => {
                   Profession Tax U/s 16 (3) B
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">0</TableCell>
+                <TableCell align="right">200</TableCell>
                 <TableCell align="right">0</TableCell>
               </TableRow>
               <TableRow>
@@ -558,8 +579,8 @@ const AnnexureIItable = () => {
                   GPF/ZPPF/CPS
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell align="right">{}</TableCell>
-                <TableCell align="right">{}</TableCell>
+                <TableCell align="right">{details.cmrforpf}</TableCell>
+                <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
                 <TableCell></TableCell>
@@ -674,7 +695,7 @@ const AnnexureIItable = () => {
                 <TableCell sx={{ width: "1%" }}>b)</TableCell>
                 <TableCell sx={{ width: "20%" }}>
                   {" "}
-                  3,00,001/- to 6,00,000/- 5%
+                  3,00,001/- to 7,00,000/- 5%
                 </TableCell>
                 <TableCell> ({details.taxDetails?.b.taxable}@5%)</TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
@@ -686,7 +707,7 @@ const AnnexureIItable = () => {
                 <TableCell sx={{ width: "1%" }}>c)</TableCell>
                 <TableCell sx={{ width: "50%" }}>
                   {" "}
-                  6,00,001/- to 9,00,000/- 10%
+                  7,00,001/- to 10,00,000/- 10%
                 </TableCell>
                 <TableCell>({details.taxDetails?.c.taxable}@10%)</TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
@@ -698,7 +719,7 @@ const AnnexureIItable = () => {
                 <TableCell sx={{ width: "1%" }}>d)</TableCell>
                 <TableCell sx={{ width: "20%" }}>
                   {" "}
-                  Above 9,00,001/ to 12,00,000/- 15%
+                  Above 10,00,001/ to 12,00,000/- 15%
                 </TableCell>
                 <TableCell> ({details.taxDetails?.d.taxable}@15%)</TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
@@ -751,7 +772,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right"></TableCell>
+                <TableCell  align="right">0</TableCell>
               </TableRow>
 
               <TableRow>
@@ -774,7 +795,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right"></TableCell>
+                <TableCell  align="right">{details.nettax}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
