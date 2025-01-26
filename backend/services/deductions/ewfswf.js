@@ -1,4 +1,5 @@
 const { monthsconst } = require("../../Months/monthsconst");
+const months=monthsconst()
 const calculateValue = (ewf, swf, month) => {
   if (month === months[0]) {
     return parseInt(ewf); // Use only ewf for Mar
