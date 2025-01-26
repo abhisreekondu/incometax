@@ -1,34 +1,22 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import BasicTextField from "../BasicTextField";
 import { Months } from "../../consts/Months";
 
 const Adavancetax = ({ data = {}, onUpdate }) => {
   const months = Months();
 
-  // Initialize state with default values for all months
   const [formData, setFormData] = useState(
     months.reduce((acc, month) => {
-      acc[month] = 0; // Default value is 0 for each month
+      acc[month] = data[month] || 0; // Use `data` values if available, default to 0
       return acc;
-    }, { ...data }) // Merge incoming data if available
+    }, {})
   );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    // Allow empty strings to be temporarily set
-    const updatedValue = value === "" ? "" : Number(value);
-  
-    const updatedFormData = { ...formData, [name]: updatedValue };
+    const updatedFormData = { ...formData, [name]: value === "" ? "" : Number(value) };
     setFormData(updatedFormData);
-  
-    // Pass updated data to parent, ensuring to send 0 for empty fields
-    onUpdate(
-      Object.keys(updatedFormData).reduce((acc, key) => {
-        acc[key] = updatedFormData[key] === "" ? 0 : updatedFormData[key];
-        return acc;
-      }, {})
-    );
+    onUpdate(updatedFormData); // Notify parent of the change immediately
   };
   
 

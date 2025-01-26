@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
-
+import { Months } from "../../consts/Months";
 const Allowances = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
     hra: "",
@@ -72,20 +72,9 @@ const Allowances = ({ data = {}, onUpdate }) => {
                 label="Month"
                 name="hramon"
                 value={formData.hramon}
-                options={[
-                  "Mar-24",
-                  "Apr-24",
-                  "May-24",
-                  "Jun-24",
-                  "Jul-24",
-                  "Aug-24",
-                  "Sep-24",
-                  "Oct-24",
-                  "Nov-24",
-                  "Dec-24",
-                  "Jan-25",
-                  "Feb-25",
-                ]}
+                options={
+                  Months()
+                }
                 onChange={handleChange}
               />
             </div>
@@ -133,20 +122,7 @@ const Allowances = ({ data = {}, onUpdate }) => {
                 label="Month"
                 name="hmamon"
                 value={formData.hmamon}
-                options={[
-                  "Mar-24",
-                  "Apr-24",
-                  "May-24",
-                  "Jun-24",
-                  "Jul-24",
-                  "Aug-24",
-                  "Sep-24",
-                  "Oct-24",
-                  "Nov-24",
-                  "Dec-24",
-                  "Jan-25",
-                  "Feb-25",
-                ]}
+                options={Months()}
                 onChange={handleChange}
               />
             </div>

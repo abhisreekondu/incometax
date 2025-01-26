@@ -1,6 +1,7 @@
 import React, { useState,useEffect } from "react";
 import BasicSelect from "../BasicSelect";
 import BasicTextField from "../BasicTextField";
+import { Months } from "../../consts/Months";
 
 const Salarydeductions = ({ data = {}, onUpdate }) => {
   const [formData, setFormData] = useState({
@@ -90,20 +91,7 @@ const Salarydeductions = ({ data = {}, onUpdate }) => {
                     label="Select Month"
                     name="pfmon"
                     value={formData.pfmon}
-                    options={[
-                      "Mar-24",
-                      "Apr-24",
-                      "May-24",
-                      "Jun-24",
-                      "Jul-24",
-                      "Aug-24",
-                      "Sep-24",
-                      "Oct-24",
-                      "Nov-24",
-                      "Dec-24",
-                      "Jan-24",
-                      "Feb-24",
-                    ]}
+                    options={Months()}
                     onChange={handleChange}
                   />
                 </div>
@@ -154,20 +142,7 @@ const Salarydeductions = ({ data = {}, onUpdate }) => {
                 label="Select Month"
                 name="apglimon"
                 value={formData.apglimon}
-                options={[
-                  "Mar-24",
-                  "Apr-24",
-                  "May-24",
-                  "Jun-24",
-                  "Jul-24",
-                  "Aug-24",
-                  "Sep-24",
-                  "Oct-24",
-                  "Nov-24",
-                  "Dec-24",
-                  "Jan-24",
-                  "Feb-24",
-                ]}
+                options={Months()}
                 onChange={handleChange}
               />
             </div>
@@ -214,20 +189,7 @@ const Salarydeductions = ({ data = {}, onUpdate }) => {
                 label="Select Month"
                 name="gismon"
                 value={formData.gismon}
-                options={[
-                  "Mar-24",
-                  "Apr-24",
-                  "May-24",
-                  "Jun-24",
-                  "Jul-24",
-                  "Aug-24",
-                  "Sep-24",
-                  "Oct-24",
-                  "Nov-24",
-                  "Dec-24",
-                  "Jan-24",
-                  "Feb-24",
-                ]}
+                options={Months()}
                 onChange={handleChange}
               />
             </div>
