@@ -1,15 +1,11 @@
-// Function to calculate CPS for a single month
+const { monthsconst } = require("../../Months/monthsconst");
 const calculateCPS = (baseSalary, da) => {
     return (baseSalary + da) * 0.1;
   };
   
   // Function to generate CPS for all months
   const getCPS = (baseSalary, da) => {
-    const months = [
-      'Mar-24', 'Apr-24', 'May-24', 'Jun-24', 'Jul-24',
-      'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24',
-      'Jan-25', 'Feb-25',
-    ];
+    const months = monthsconst();
   
     const CPSMap = {};
   

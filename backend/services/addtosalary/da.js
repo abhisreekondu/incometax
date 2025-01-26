@@ -1,16 +1,18 @@
-// Function to calculate DA for a single month
+const { monthsconst } = require("../../Months/monthsconst");
+const months = monthsconst()
 const calculateDA = (month, basicSalary) => {
   // Define DA rates
+ 
   const mar = 0.2639; // 26.39%
   const earlyDARate=0.3003//30.03%
   const laterDARate = 0.3367; // 33.67%
 
   // Define months for rate change
-  const earlyRateMonths = [ 'Apr-24', 'May-24', 'Jun-24'];
-  const laterRateMonths = ['Jul-24', 'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24', 'Jan-25', 'Feb-25'];
+  const earlyRateMonths = months.slice(1,4)//apr,may,jun
+  const laterRateMonths = months.slice(4,12)//jul to feb
 
   // Check which rate to apply
-  if(month== 'Mar-24')
+  if(month== months[0])
   {
     return basicSalary * mar;
   }
@@ -25,11 +27,7 @@ const calculateDA = (month, basicSalary) => {
 
 // Function to get DA map for months from Mar-24 to Feb-25
 const getDAMap = (baseSalary) => {
-  const months = [
-      'Mar-24', 'Apr-24', 'May-24', 'Jun-24', 'Jul-24',
-      'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24',
-      'Jan-25', 'Feb-25'
-  ];
+
 
   const daMap = {};
 

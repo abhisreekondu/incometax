@@ -1,3 +1,5 @@
+const { monthsconst } = require("../../Months/monthsconst");
+
 const baseSalaries = [
   20000, 20600, 21200, 21800, 22460, 23120, 23780, 24500, 25220,
   25940, 26720, 27500, 28280, 29130, 29980, 30830, 31750, 32670,
@@ -13,10 +15,7 @@ const baseSalaries = [
 
 // Function to calculate the base salary for each month
 const calculateBaseSalary = (incrementMonth, promomon, aasMonth, startingBasicPay) => {
-  const months = [
-    'Mar-24', 'Apr-24', 'May-24', 'Jun-24', 'Jul-24',
-    'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24', 'Jan-25', 'Feb-25'
-  ];
+  const months=monthsconst();
 
   // Determine the starting index based on the provided basic pay
   let baseSalaryIndex = baseSalaries.indexOf(startingBasicPay);

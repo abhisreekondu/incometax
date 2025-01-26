@@ -1,4 +1,4 @@
-
+const { monthsconst } = require("../../Months/monthsconst");
 const calculategis= (gissub,gischangedamt,flag) => {
 
     if (flag) {
@@ -9,11 +9,7 @@ const calculategis= (gissub,gischangedamt,flag) => {
   };
   
   const getGIS = (gissub, gismon, gischangedamt) => {
-    const months = [
-      'Mar-24', 'Apr-24', 'May-24', 'Jun-24', 'Jul-24',
-      'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24',
-      'Jan-25', 'Feb-25'
-    ];
+    const months = monthsconst();
   
     const GIS = {};
   let flag=false;

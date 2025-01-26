@@ -1,4 +1,4 @@
-// Function to calculate HRA for each month
+const { monthsconst } = require("../../Months/monthsconst");
 const calculateAPGLI = (apglisub,apgliamt,flag) => {
 
     if (flag) {
@@ -9,11 +9,7 @@ const calculateAPGLI = (apglisub,apgliamt,flag) => {
   };
   
   const getAPGLI = (apglisub, apglimon, apgliamt) => {
-    const months = [
-      'Mar-24', 'Apr-24', 'May-24', 'Jun-24', 'Jul-24',
-      'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24',
-      'Jan-25', 'Feb-25'
-    ];
+    const months = monthsconst();
   
     const APGLI = {};
   let flag=false;
