@@ -9,7 +9,6 @@ import {
   Paper,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-
 import useFormStore from "../store/formStore";
 import Button from "@mui/material/Button";
 import useSalaryDataStore from "../store/salaryDataStore";
@@ -18,7 +17,7 @@ import html2canvas from "html2canvas";
 import { jsPDF } from "jspdf";
 
 const AnnexureIItable = () => {
-  const [details, setDetails] = useState(null); 
+  const [details, setDetails] = useState(null);
   const formData = useFormStore((state) => state.formData);
   const salaryData = useSalaryDataStore((state) => state.salaryData);
   const sums = usetotalsumStore((state) => state.sums);
@@ -30,23 +29,23 @@ const AnnexureIItable = () => {
 
   const handleDownload = async () => {
     const element = document.getElementById("page-2");
-  
+
     if (!element) {
       console.error("Element with id 'page-2' not found.");
       return;
     }
-  
+
     try {
       // Add a short delay
       await new Promise((resolve) => setTimeout(resolve, 100));
-  
+
       const canvas = await html2canvas(element, {
         scrollX: 0,
         scrollY: -window.scrollY,
         useCORS: true,
         windowHeight: element.scrollHeight,
       });
-  
+
       const imgData = canvas.toDataURL("image/png");
       const pdf = new jsPDF("p", "mm", "a4");
       const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -56,30 +55,29 @@ const AnnexureIItable = () => {
       const canvasHeight = canvas.height;
       const scaleFactor = pdfWidth / canvasWidth;
 
-      const scaledWidth = pdfWidth - 2 * horizontalMargin; 
-  
+      const scaledWidth = pdfWidth - 2 * horizontalMargin;
+
       let scaledHeight = canvasHeight * scaleFactor;
-  
+
       if (scaledHeight > pdfHeight) {
         const heightScaleFactor = pdfHeight / scaledHeight;
         scaledHeight = pdfHeight;
         scaledWidth *= heightScaleFactor;
       }
-  
+
       const x = horizontalMargin;
       const y = 10;
-  
+
       pdf.addImage(imgData, "PNG", x, y, scaledWidth, scaledHeight);
       pdf.save("Annexure-II.pdf");
     } catch (error) {
       console.error("Error capturing the page:", error);
     }
   };
-  
 
   const calculateTaxDetails = (muloften) => {
     console.log(muloften);
-  
+
     const taxDetails = {
       a: { taxable: 0, tax: 0 }, // Up to 3,00,000
       b: { taxable: 0, tax: 0 }, // 3,00,001 to 7,00,000
@@ -88,7 +86,7 @@ const AnnexureIItable = () => {
       e: { taxable: 0, tax: 0 }, // 12,00,001 to 15,00,000
       f: { taxable: 0, tax: 0 }, // Above 15,00,000
     };
-  
+
     // Tax calculation logic
     if (muloften <= 300000) {
       taxDetails.a.taxable = muloften;
@@ -96,83 +94,91 @@ const AnnexureIItable = () => {
     } else if (muloften <= 700000) {
       taxDetails.a.taxable = 300000;
       taxDetails.a.tax = 0;
-  
+
       taxDetails.b.taxable = muloften - 300000;
       taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
     } else if (muloften <= 1000000) {
       taxDetails.a.taxable = 300000;
       taxDetails.a.tax = 0;
-  
+
       taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
       taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
-  
+
       taxDetails.c.taxable = muloften - 700000;
-      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.1); // 10%
     } else if (muloften <= 1200000) {
       taxDetails.a.taxable = 300000;
       taxDetails.a.tax = 0;
-  
+
       taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
       taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
-  
+
       taxDetails.c.taxable = 300000; // Full slab for 7,00,001 to 10,00,000
-      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
-  
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.1); // 10%
+
       taxDetails.d.taxable = muloften - 1000000;
       taxDetails.d.tax = Math.round(taxDetails.d.taxable * 0.15); // 15%
     } else if (muloften <= 1500000) {
       taxDetails.a.taxable = 300000;
       taxDetails.a.tax = 0;
-  
+
       taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
       taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
-  
+
       taxDetails.c.taxable = 300000; // Full slab for 7,00,001 to 10,00,000
-      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
-  
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.1); // 10%
+
       taxDetails.d.taxable = 200000; // Full slab for 10,00,001 to 12,00,000
       taxDetails.d.tax = Math.round(taxDetails.d.taxable * 0.15); // 15%
-  
+
       taxDetails.e.taxable = muloften - 1200000;
-      taxDetails.e.tax = Math.round(taxDetails.e.taxable * 0.20); // 20%
+      taxDetails.e.tax = Math.round(taxDetails.e.taxable * 0.2); // 20%
     } else {
       taxDetails.a.taxable = 300000;
       taxDetails.a.tax = 0;
-  
+
       taxDetails.b.taxable = 400000; // Full slab for 3,00,001 to 7,00,000
       taxDetails.b.tax = Math.round(taxDetails.b.taxable * 0.05); // 5%
-  
+
       taxDetails.c.taxable = 300000; // Full slab for 7,00,001 to 10,00,000
-      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.10); // 10%
-  
+      taxDetails.c.tax = Math.round(taxDetails.c.taxable * 0.1); // 10%
+
       taxDetails.d.taxable = 200000; // Full slab for 10,00,001 to 12,00,000
       taxDetails.d.tax = Math.round(taxDetails.d.taxable * 0.15); // 15%
-  
+
       taxDetails.e.taxable = 300000; // Full slab for 12,00,001 to 15,00,000
-      taxDetails.e.tax = Math.round(taxDetails.e.taxable * 0.20); // 20%
-  
+      taxDetails.e.tax = Math.round(taxDetails.e.taxable * 0.2); // 20%
+
       taxDetails.f.taxable = muloften - 1500000;
-      taxDetails.f.tax = Math.round(taxDetails.f.taxable * 0.30); // 30%
+      taxDetails.f.tax = Math.round(taxDetails.f.taxable * 0.3); // 30%
     }
-  
+
     return taxDetails;
   };
-  
-  
 
   const values = Object.values(formData.advanceTax);
 
   // Extract employee details
   const getDetails = () => {
-    const netincsal = (sums.gross || 0) - 75000; 
-    const muloften = Math.round(netincsal / 10) * 10; 
-    const taxDetails= calculateTaxDetails(muloften)||{}; 
-    const taxoninc=taxDetails?.a.tax+taxDetails?.b.tax+taxDetails?.c.tax+taxDetails?.d.tax+taxDetails?.e.tax+taxDetails?.f.tax;
-    const cess=Math.round(taxoninc*0.04);
-    const nettax=taxoninc+cess;
-    const cmrforpf=formData.salaryDeductions.pensiontype === "CPS" ? sums.cps : sums.pf;
-    const totaladvtax= values.reduce((sum, value) => sum + (Number(value) || 0), 0);
-    const totaltax=nettax-totaladvtax;
+    const netincsal = (sums.gross || 0) - 75000;
+    const muloften = Math.round(netincsal / 10) * 10;
+    const taxDetails = calculateTaxDetails(muloften) || {};
+    const taxoninc =
+      taxDetails?.a.tax +
+      taxDetails?.b.tax +
+      taxDetails?.c.tax +
+      taxDetails?.d.tax +
+      taxDetails?.e.tax +
+      taxDetails?.f.tax;
+    const cess = Math.round(taxoninc * 0.04);
+    const nettax = taxoninc + cess;
+    const cmrforpf =
+      formData.salaryDeductions.pensiontype === "CPS" ? sums.cps : sums.pf;
+    const totaladvtax = values.reduce(
+      (sum, value) => sum + (Number(value) || 0),
+      0
+    );
+    const totaltax = nettax - totaladvtax;
     return {
       empname: formData?.personalDetails?.employeeName || "N/A",
       age: formData?.personalDetails?.age || "N/A",
@@ -197,19 +203,16 @@ const AnnexureIItable = () => {
       nettax,
       cmrforpf,
       totaladvtax,
-     totaltax,
+      totaltax,
     };
   };
-  
-
 
   useEffect(() => {
-    // Redirect to the form page if salaryData is not available
-    if (!salaryData || !salaryData.basesalary || !sums)  {
+    console.log('salary data in annexure2',salaryData)
+    if (!salaryData || !salaryData.basesalary || !sums) {
       navigate("/");
     } else {
-    
-      setDetails( getDetails());
+      setDetails(getDetails());
     }
   }, []);
 
@@ -330,7 +333,9 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
 
-                <TableCell colSpan={2} align="right">{details.gross}</TableCell>
+                <TableCell colSpan={2} align="right">
+                  {details.gross}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -434,7 +439,9 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right">75000</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="right">
+                  75000
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -468,7 +475,7 @@ const AnnexureIItable = () => {
                 <TableCell align="right"></TableCell>
               </TableRow>
               <TableRow>
-                <TableCell></TableCell>      
+                <TableCell></TableCell>
                 <TableCell colSpan={3} sx={{ width: "60%" }}>
                   Net Income from Salary (7+8)
                 </TableCell>
@@ -647,8 +654,10 @@ const AnnexureIItable = () => {
                   Rs.50,000/-)
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell sx={{ width: "15%" }} align="right">0</TableCell>
-                <TableCell  align="right">0</TableCell>
+                <TableCell sx={{ width: "15%" }} align="right">
+                  0
+                </TableCell>
+                <TableCell align="right">0</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -659,7 +668,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell  align="right">{details.netincsal}</TableCell>
+                <TableCell align="right">{details.netincsal}</TableCell>
               </TableRow>
 
               <TableRow>
@@ -671,7 +680,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell  align="right">{details.muloften}</TableCell>
+                <TableCell align="right">{details.muloften}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -764,7 +773,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell  align="right">{details.taxoninc}</TableCell>
+                <TableCell align="right">{details.taxoninc}</TableCell>
               </TableRow>
 
               <TableRow>
@@ -776,7 +785,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell  align="right">0</TableCell>
+                <TableCell align="right">0</TableCell>
               </TableRow>
 
               <TableRow>
@@ -787,8 +796,8 @@ const AnnexureIItable = () => {
                   Cess(Health 1% + Education 3% )
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
-                <TableCell sx={{ width: "15%" }}align="right"></TableCell>
-                <TableCell  align="right">{details.cess}</TableCell>
+                <TableCell sx={{ width: "15%" }} align="right"></TableCell>
+                <TableCell align="right">{details.cess}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -799,7 +808,7 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell  align="right">{details.nettax}</TableCell>
+                <TableCell align="right">{details.nettax}</TableCell>
               </TableRow>
               <TableRow>
                 <TableCell sx={{ width: "5%" }} align="left">
@@ -812,20 +821,46 @@ const AnnexureIItable = () => {
               <TableRow>
                 <TableCell></TableCell>
                 <TableCell colSpan={3} sx={{ width: "60%" }}>
-                  Q1:({values[0]}+{values[1]}+{values[2]}={values[0]+values[1]+values[2]}) Q2: ({values[3]}+{values[4]}+{values[5]}={values[3]+values[4]+values[5]})
+                  Q1: ({values[0] === "" ? 0 : values[0]} +{" "}
+                  {values[1] === "" ? 0 : values[1]} +{" "}
+                  {values[2] === "" ? 0 : values[2]} ={" "}
+                  {(values[0] === "" ? 0 : values[0]) +
+                    (values[1] === "" ? 0 : values[1]) +
+                    (values[2] === "" ? 0 : values[2])}
+                  ) Q2: ({values[3] === "" ? 0 : values[3]} +{" "}
+                  {values[4] === "" ? 0 : values[4]} +{" "}
+                  {values[5] === "" ? 0 : values[5]} ={" "}
+                  {(values[3] === "" ? 0 : values[3]) +
+                    (values[4] === "" ? 0 : values[4]) +
+                    (values[5] === "" ? 0 : values[5])}
+                  )
                 </TableCell>
+
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell rowSpan={2}>Total Advance Tax</TableCell>
-                <TableCell  rowSpan={2} align="right">{details.totaladvtax}</TableCell>
+                <TableCell rowSpan={2} align="right">
+                  {details.totaladvtax}
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell></TableCell>
                 <TableCell colSpan={3} sx={{ width: "60%" }}>
-                  Q3:({values[6]}+{values[7]}+{values[8]}={values[6]+values[7]+values[8]}) Q4: ({values[9]}+{values[10]}+{values[11]}=={values[9]+values[10]+values[11]})
+                  Q3: ({values[6] === "" ? 0 : values[6]} +{" "}
+                  {values[7] === "" ? 0 : values[7]} +{" "}
+                  {values[8] === "" ? 0 : values[8]} ={" "}
+                  {(values[6] === "" ? 0 : values[6]) +
+                    (values[7] === "" ? 0 : values[7]) +
+                    (values[8] === "" ? 0 : values[8])}
+                  ) Q4: ({values[9] === "" ? 0 : values[9]} +{" "}
+                  {values[10] === "" ? 0 : values[10]} +{" "}
+                  {values[11] === "" ? 0 : values[11]} ={" "}
+                  {(values[9] === "" ? 0 : values[9]) +
+                    (values[10] === "" ? 0 : values[10]) +
+                    (values[11] === "" ? 0 : values[11])}
+                  )
                 </TableCell>
-                <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
 
-               
+                <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
               </TableRow>
 
               <TableRow>
@@ -837,7 +872,9 @@ const AnnexureIItable = () => {
                 </TableCell>
                 <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
                 <TableCell sx={{ width: "15%" }} align="right"></TableCell>
-                <TableCell sx={{ fontWeight: "bold" }} align="right">{details.totaltax}</TableCell>
+                <TableCell sx={{ fontWeight: "bold" }} align="right">
+                  {details.totaltax}
+                </TableCell>
               </TableRow>
               <TableRow style={{ height: "120px", border: "none" }}>
                 <TableCell
