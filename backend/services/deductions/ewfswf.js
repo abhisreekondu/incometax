@@ -1,22 +1,19 @@
+const { monthsconst } = require("../../Months/monthsconst");
 const calculateValue = (ewf, swf, month) => {
-  if (month === 'Mar-24') {
-    return parseInt(ewf); // Use only ewf for Mar-24
+  if (month === months[0]) {
+    return parseInt(ewf); // Use only ewf for Mar
   }
-  if (month === 'Sep-24') {
-    return 841; // Fixed value for Sep-24
-  }
-  if (month === 'Dec-24') {
-    return parseInt(swf); // Use only swf for Dec-24
+  // if (month === 'Sep-24') {
+  //   return Math.round((basic)/30); // Fixed value for Sep-24
+  // }
+  if (month === months[9]) {
+    return parseInt(swf); // Use only swf for Dec
   }
   return 0; // All other months
 };
 
 const getewfswf = (ewf, swf) => {
-  const months = [
-    'Mar-24', 'Apr-24', 'May-24', 'Jun-24', 'Jul-24',
-    'Aug-24', 'Sep-24', 'Oct-24', 'Nov-24', 'Dec-24',
-    'Jan-25', 'Feb-25'
-  ];
+  const months = monthsconst()
 
   const map = {};
 
