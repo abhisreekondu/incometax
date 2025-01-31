@@ -55,7 +55,7 @@ const AnnexureIItable = () => {
       const canvasHeight = canvas.height;
       const scaleFactor = pdfWidth / canvasWidth;
 
-      const scaledWidth = pdfWidth - 2 * horizontalMargin;
+      let scaledWidth = pdfWidth - 2 * horizontalMargin;
 
       let scaledHeight = canvasHeight * scaleFactor;
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react"
 import {
   Table,
   TableBody,
@@ -18,6 +18,7 @@ import { jsPDF } from "jspdf";
 import useFormStore from "../store/formStore";
 import useSalaryDataStore from "../store/salaryDataStore";
 import usetotalsumStore from "../store/totalsumsStore";
+import { Months } from "../consts/Months";
 
 
 const SalaryTable = () => {
@@ -58,35 +59,8 @@ const setSums = usetotalsumStore((state) => state.setSums);
   }, [rows, otherRows]);
   
 
-  // Function to calculate financial year months dynamically
-  const getFinancialYearMonths = () => {
-    const currentDate = new Date();
-    const currentYear = currentDate.getFullYear();
-    const currentMonth = currentDate.getMonth(); // 0 (Jan) to 11 (Dec)
-
-    // Determine financial year start and end
-    const financialYearStart = currentMonth < 3 ? currentYear - 1 : currentYear;
-    const financialYearEnd = financialYearStart + 1;
-
-    // Generate months from March to February
-    return [
-      `Mar-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Apr-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `May-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Jun-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Jul-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Aug-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Sep-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Oct-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Nov-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Dec-${(financialYearEnd - 1).toString().slice(-2)}`,
-      `Jan-${financialYearEnd.toString().slice(-2)}`,
-      `Feb-${financialYearEnd.toString().slice(-2)}`,
-    ];
-  };
-
-  // Fixed months for the table
-  const months = getFinancialYearMonths();
+  
+  const months = Months();
 
   const handleEdit = () => {
     navigate("/"); // Navigate back to the form with previous data
@@ -121,9 +95,9 @@ const setSums = usetotalsumStore((state) => state.setSums);
       const canvasWidth = canvas.width;
       const canvasHeight = canvas.height;
 
-      const scaledWidth = pdfWidth - 2 * horizontalMargin; 
+      let scaledWidth = pdfWidth - 2 * horizontalMargin; 
       const scaleFactor = scaledWidth / canvasWidth; 
-      const scaledHeight = canvasHeight * scaleFactor;
+      let scaledHeight = canvasHeight * scaleFactor;
       const x = horizontalMargin; 
       const y = (pdfHeight - scaledHeight) / 2;
       // Check if the scaled height exceeds the page height
@@ -291,6 +265,8 @@ const setSums = usetotalsumStore((state) => state.setSums);
   // Render the salary table
   return (
     <div>
+      {rows.length > 0 ?(
+        <>
       <TableContainer
         component={Paper}
         style={{
@@ -701,6 +677,28 @@ const setSums = usetotalsumStore((state) => state.setSums);
       >
         Form-16
       </Button>
+      </>
+      ):loading?(
+        <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
+    ) : error ? ( 
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <Typography variant="h6" color="error">
+          {error}
+        </Typography>
+      </Box>
+    ) : null} 
     </div>
   );
 };
