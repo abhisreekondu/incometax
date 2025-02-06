@@ -22,7 +22,7 @@ const Form16 = () => {
   return (
     <div>
       <div
-        id="page-2"
+        id="page-1"
         style={{
           width: "80%",
           margin: "0 auto",
@@ -38,7 +38,7 @@ const Form16 = () => {
         >
           <Table
             stickyHeader
-            aria-label="salary table"
+            aria-label="first table"
             sx={{
               width: "100%",
               borderCollapse: "collapse",
@@ -151,7 +151,7 @@ const Form16 = () => {
           </Table>
           <Table
             stickyHeader
-            aria-label="salary table"
+            aria-label="first table"
             sx={{
               width: "100%",
               borderCollapse: "collapse",
@@ -391,9 +391,10 @@ const Form16 = () => {
               </TableRow>
             </TableBody>
           </Table>
+  
           <Table
             stickyHeader
-            aria-label="salary table"
+            aria-label="first table"
             sx={{
               width: "100%",
               borderCollapse: "collapse",
@@ -511,7 +512,205 @@ const Form16 = () => {
             </TableBody>
           </Table>
         </TableContainer>
+
       </div>
+      <div
+        id="page-2"
+        style={{
+          width: "80%",
+          margin: "0 auto",
+        }}
+      >
+        <TableContainer
+          component={Paper}
+          style={{
+            width: "100%",
+            margin: "0 auto",
+            border: "none",
+          }}
+        >
+          <Table
+            stickyHeader
+            aria-label="first table"
+            sx={{
+              width: "100%",
+              borderCollapse: "collapse",
+              "& td, & th": {
+                border: "1px solid black",
+                padding: "5px",
+              },
+            }}
+          >
+            <Button>Download front page</Button>
+
+            <TableBody>
+              <TableRow>
+              <TableCell sx={{ width: "5%" }}></TableCell>
+              <TableCell sx={{ width: "5%" }}>b)</TableCell>
+              <TableCell sx={{ width: "50%" }}>NPS U/s 80CCD (1)</TableCell>
+              <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
+              <TableCell></TableCell>
+
+              <TableCell></TableCell>
+              </TableRow>
+              <TableRow>
+              <TableCell sx={{ width: "5%" }}></TableCell>
+              <TableCell sx={{ width: "5%" }}></TableCell>
+              <TableCell sx={{ width: "50%" }}> National Pension Scheme U/s 80CCD (1B)</TableCell>
+              <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              </TableRow>
+              <TableRow>
+              <TableCell sx={{ width: "5%" }}></TableCell>
+              <TableCell colSpan={2}>Total Amount of Section a and b</TableCell>
+              <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
+              <TableCell></TableCell>
+              <TableCell></TableCell>
+              </TableRow>
+
+            </TableBody>
+            
+          
+          </Table>
+          <Table
+            stickyHeader
+            aria-label="second table"
+            sx={{
+              width: "100%",
+              borderCollapse: "collapse",
+              "& td, & th": {
+                border: "1px solid black",
+                padding: "5px",
+              },
+            }}
+          >
+            <TableRow>
+              <TableCell sx={{width:"5%"}}>B)</TableCell>
+              <TableCell sx={{width:"40%"}} colSpan={3}>Other Section Under Chapter VI A <br/>
+              ( Under Section 80E, 80G, 80TTA, 80G, 80DD etc. )</TableCell>
+              <TableCell sx={{width:"15%"}}>Gross Amount</TableCell>
+              <TableCell sx={{width:"15%"}}>Qualifying Amount</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}>80G</TableCell>
+              <TableCell sx={{width:"40%"}}>EWF, SWF & CMRF</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}>24B</TableCell>
+              <TableCell sx={{width:"40%"}}>Interest of Housing Loan U/s 24</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}></TableCell>
+              <TableCell sx={{width:"40%"}}>80G Donations to Charities</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}>80U/80DD</TableCell>
+              <TableCell sx={{width:"40%"}}>Self/Dependent Expenditure of Disabled</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}>80D</TableCell>
+              <TableCell sx={{width:"40%"}}>Employees Health Cards Premium in AP</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}>80CCD(2)	</TableCell>
+              <TableCell sx={{width:"40%"}}>Employer Contribution Towards CPS</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}></TableCell>
+              <TableCell sx={{width:"40%"}}>80E Interest of Educational Loan</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}></TableCell>
+            <TableCell sx={{width:"5%"}}></TableCell>
+              <TableCell sx={{width:"40%"}}>Additional Benefit CPS Employee U/s 80CCD (1B)(upto Rs.50,000/-)</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            </Table>
+            <Table 
+             stickyHeader
+             aria-label="second table"
+             sx={{
+               width: "100%",
+               borderCollapse: "collapse",
+               "& td, & th": {
+                 border: "1px solid black",
+                 padding: "5px",
+               },
+             }}
+            >
+
+            <TableRow>
+
+            <TableCell sx={{width:"5%"}}></TableCell>
+              <TableCell sx={{width:"75.2%"}} colSpan={4}>Total Under Sections 80G,80E,80DD etc..</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+              <TableCell sx={{width:"75.2%"}} colSpan={4}>Aggregate of Deductible Amounts U/Chapter VIA (A+B)</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+              <TableCell sx={{width:"75.2%"}} colSpan={4}>Net Taxable Income (Column 8- Column 10)</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>
+            <TableRow>
+            <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+              <TableCell sx={{width:"75.2%"}} colSpan={4}>Tax on Income(Rounded)</TableCell>
+              <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+              <TableCell sx={{width:"15%"}}></TableCell>
+            </TableRow>  
+             
+          </Table>
+
+          
+
+          </TableContainer>
+          </div>
     </div>
   );
 };
