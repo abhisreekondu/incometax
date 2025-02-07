@@ -938,6 +938,22 @@ const Form16 = () => {
           padding: "10px",
           marginBottom: "10px",
            width:"17%"
+        }}>Download front page</Button>
+          <Button  variant="contained"
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px",
+          marginBottom: "10px",
+           width:"17%"
+        }}>Download second page</Button>
+          <Button  variant="contained"
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px",
+          marginBottom: "10px",
+           width:"17%"
         }} 
         onClick={handleback}>Back to Salary Table
         </Button>
@@ -949,22 +965,7 @@ const Form16 = () => {
           marginBottom: "10px",
            width:"17%"
         }}onClick={annexure}>Back to Annexure-II</Button>
-          <Button  variant="contained"
-        style={{
-          marginTop: "20px",
-          marginLeft: "10px",
-          padding: "10px",
-          marginBottom: "10px",
-           width:"17%"
-        }}>Download front page</Button>
-          <Button  variant="contained"
-        style={{
-          marginTop: "20px",
-          marginLeft: "10px",
-          padding: "10px",
-          marginBottom: "10px",
-           width:"17%"
-        }}>Download second page</Button>
+      
        
           </div>
     </div>
