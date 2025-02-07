@@ -123,6 +123,9 @@ const handleForm16 = () => {
   };
 
   useEffect(() => {
+    console.log("SalaryData in annexure", salaryData)
+    console.log("FormData in annexure", formData)
+    console.log("SumsData in annexure", sums)
     if (salaryData && sums && formData) {
       const advanceTax = Object.values(formData.advanceTax);
       setTaxDetails(sums.gross, advanceTax); 
@@ -833,19 +836,7 @@ const handleForm16 = () => {
       >
         Back 
       </Button>
-      <Button
-        variant="contained"
-        style={{
-          marginTop: "20px",
-          marginLeft: "10px",
-          padding: "10px",
-          marginBottom: "10px",
-           width:"7%"
-        }}
-        onClick={handleForm16}
-      >
-        Form-16
-      </Button>
+    
 
       <Button
         variant="contained"
@@ -854,11 +845,24 @@ const handleForm16 = () => {
           marginLeft: "10px",
           padding: "10px",
           marginBottom: "10px",
-           width:"7%"
+      
         }}
         onClick={handleDownload}
       >
         Download 
+      </Button>
+      <Button
+        variant="contained"
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px",
+          marginBottom: "10px",
+        
+        }}
+        onClick={handleForm16}
+      >
+        Form-16
       </Button>
     </div>
   );
