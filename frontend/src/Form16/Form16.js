@@ -13,12 +13,22 @@ import useFormStore from "../store/formStore";
 import Button from "@mui/material/Button";
 import useSalaryDataStore from "../store/salaryDataStore";
 import usetotalsumStore from "../store/totalsumsStore";
+import useTaxStore from "../store/taxStore";
 
 const Form16 = () => {
+    const navigate = useNavigate();
   const formData = useFormStore((state) => state.formData);
   const salaryData = useSalaryDataStore((state) => state.salaryData);
+  const taxDetails = useTaxStore((state) => state.taxDetails); 
   let idx = 1;
   let idx1=1
+  const annexure = () => {
+  
+    navigate("/annexureii"); 
+  };
+    const handleback = () => {
+      navigate("/table");
+    };
   return (
     <div>
       <div
@@ -201,7 +211,7 @@ const Form16 = () => {
                 <TableCell>c)</TableCell>
                 <TableCell>
                   Profits in lieu of salary under section 17(3) (as per Form No.
-                  12BA, Wherver applicable){" "}
+                  12BA, Wherever applicable){" "}
                 </TableCell>
                 <TableCell>Rs</TableCell>
                 <TableCell></TableCell>
@@ -541,7 +551,7 @@ const Form16 = () => {
               },
             }}
           >
-            <Button>Download front page</Button>
+            
 
             <TableBody>
               <TableRow>
@@ -704,12 +714,258 @@ const Form16 = () => {
               <TableCell sx={{width:"5%"}}>Rs.</TableCell>
               <TableCell sx={{width:"15%"}}></TableCell>
             </TableRow>  
-             
+            </Table>
+         
+         <Table
+         aria-label="second table"
+         sx={{
+           width: "100%",
+           borderCollapse: "collapse",
+           "& td, & th": {
+             border: "1px solid black",
+             padding: "5px",
+           },
+         }}
+         >
+            <TableBody>
+            <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell sx={{ width: "3%" }}>a)</TableCell>
+                            <TableCell colSpan={2} sx={{ width: "20%" }}>
+                              {" "}
+                              Upto-3,00,000
+                            </TableCell>
+            
+                            <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
+                            <TableCell align="right"></TableCell>
+                            <TableCell align="right">0</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell sx={{ width: "3%" }}>b)</TableCell>
+                            <TableCell sx={{ width: "20%" }}>
+                              {" "}
+                              3,00,001/- to 7,00,000/- 5%
+                            </TableCell>
+                            <TableCell> ({taxDetails?.b.taxable}@5%)</TableCell>
+                            <TableCell sx={{ width: "5%" }}>Rs.</TableCell>
+                            <TableCell align="right" sx={{width:"10%"}} ></TableCell>
+                            <TableCell align="right">{taxDetails?.b.tax}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell sx={{ width: "3%" }}>c)</TableCell>
+                            <TableCell sx={{ width: "50%" }}>
+                              {" "}
+                              7,00,001/- to 10,00,000/- 10%
+                            </TableCell>
+                            <TableCell>({taxDetails?.c.taxable}@10%)</TableCell>
+                            <TableCell >Rs.</TableCell>
+                            <TableCell align="right"></TableCell>
+                            <TableCell align="right">{taxDetails?.c.tax}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell >d)</TableCell>
+                            <TableCell sx={{ width: "20%" }}>
+                              {" "}
+                              Above 10,00,001/ to 12,00,000/- 15%
+                            </TableCell>
+                            <TableCell> ({taxDetails?.d.taxable}@15%)</TableCell>
+                            <TableCell >Rs.</TableCell>
+                            <TableCell align="right"></TableCell>
+                            <TableCell align="right">{taxDetails?.d.tax}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell >e)</TableCell>
+                            <TableCell sx={{ width: "20%" }}>
+                              {" "}
+                              Above 12,00,001/ to 15,00,000/- 20%
+                            </TableCell>
+                            <TableCell>({taxDetails?.e.taxable}@20%)</TableCell>
+                            <TableCell >Rs.</TableCell>
+                            <TableCell align="right"></TableCell>
+                            <TableCell align="right">{taxDetails?.e.tax}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell></TableCell>
+                            <TableCell >f)</TableCell>
+                            <TableCell sx={{ width: "20%" }}>
+                              {" "}
+                              Above 15,00,000/- 30%
+                            </TableCell>
+                            <TableCell>({taxDetails?.f.taxable}@30%)</TableCell>
+                            <TableCell >Rs.</TableCell>
+                            <TableCell align="right"></TableCell>
+                            <TableCell align="right">{taxDetails?.f.tax}</TableCell>
+                          </TableRow>
+                          <TableRow>
+                            <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                            <TableCell colSpan={3}>Tax on Income </TableCell>
+                            <TableCell >Rs.</TableCell>
+                            <TableCell colSpan={2}></TableCell>
+                          </TableRow>
+                          </TableBody>
+                          
+                          </Table>
+                          <Table
+                          aria-label="second table"
+                          sx={{
+                            width: "100%",
+                            borderCollapse: "collapse",
+                            "& td, & th": {
+                              border: "1px solid black",
+                              padding: "5px",
+                            },
+                          }}
+                          >
+                            <TableBody>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                                <TableCell>Tax Rebate(U/s 87A-Rs.25000) below Rs.7,00,000</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                                <TableCell>TAX PAYBLE (12-13)</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                                <TableCell>Health Cess @ 1% + Education Cess @ 3%</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                                <TableCell>TAX PAYABLE (14+15)</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                                <TableCell>Less: (a) Tax deducted at source U/s 192(1))</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}></TableCell>
+                                <TableCell>(b)Tax Paid by the Employer on behalf of the Employee U/S 192 (1A) on perquisited U/S 17 (2)</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                                <TableCell>Less: Relief under section 89 (1) (attach details)</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"5%"}}>{idx1++}</TableCell>
+                                <TableCell>	Net Tax to be Paid</TableCell>
+                                <TableCell sx={{width:"5%"}}>Rs.</TableCell>
+                                <TableCell sx={{width:"18.6%"}}></TableCell>
+                              </TableRow>
+                            </TableBody>
+                          </Table>
+                          <Table
+                          aria-label="second table"
+                          sx={{
+                            width: "100%",
+                            borderCollapse: "collapse",
+                            "& td, & th": {
+                              border: "1px solid black",
+                              padding: "5px",
+                            },
+                          }}
+                          >
+                            <TableBody>
+                              <TableRow>
+                                <TableCell sx={{textAlign:"center"}} colSpan={9}>DETAILS OF TAX DEDUCTED AND DEPOSITED INTO CENTRAL GOVERNMENT ACCOUNT (The employer is provide tranction - wise details of tax deducted and deposited )</TableCell>
+
+                              </TableRow>
+                              <TableRow>
+                                <TableCell sx={{width:"11%"}}>Sl. No</TableCell>
+                                <TableCell sx={{width:"11%"}}>TDS Rs.</TableCell>
+                                <TableCell sx={{width:"11%"}}>Surcharge Rs.	</TableCell>
+                                <TableCell sx={{width:"11%"}}>Education Cess Rs.</TableCell>
+                                <TableCell sx={{width:"11%"}}>Total Tax Deposited Rs.</TableCell>
+                                <TableCell sx={{width:"11%"}}>Cheque/DD No. (if any)</TableCell>
+                                <TableCell sx={{width:"11%"}}>	BSR Code of Bank Branch</TableCell>
+                                <TableCell sx={{width:"11%"}}>Date on Which Tax Deposited</TableCell>
+                                <TableCell sx={{width:"11%"}}>Transfer vocher/chalana Identification No</TableCell>
+                              </TableRow>
+                              {[...Array(12)].map((_, index) => (
+      <TableRow key={index}>
+        <TableCell>{index + 1}</TableCell> {/* Serial number */}
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+        <TableCell></TableCell>
+      </TableRow>
+    ))}
+        <TableRow >  
+          <TableCell colSpan={9} sx={{textAlign:"center"}}> 
+            I Sri./Smt. working in the capacity of do hereby certify that the sum of Rupess stated above deducted at source and paid to the credit of the central <br/> Government. I further certify that the Information given above is true and correct based on the books of account, documents and other available records.                    
+          </TableCell>
+          </TableRow> 
+          <TableRow>
+          <TableCell  colSpan={5}></TableCell>
+            <TableCell  colSpan={4}>Sign--</TableCell>
+              </TableRow> 
+              <TableRow>
+          <TableCell  colSpan={5}>Place:</TableCell>
+            <TableCell  colSpan={4}>Sign of the person responsible for deduction of tax :</TableCell>
+              </TableRow>
+              <TableRow>
+          <TableCell  colSpan={5}>Date:</TableCell>
+            <TableCell  colSpan={4}>Full Name:</TableCell>
+              </TableRow>
+              </TableBody>
           </Table>
-
-          
-
           </TableContainer>
+          <Button  variant="contained"
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px",
+          marginBottom: "10px",
+           width:"17%"
+        }} 
+        onClick={handleback}>Back to Salary Table
+        </Button>
+        <Button  variant="contained"
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px",
+          marginBottom: "10px",
+           width:"17%"
+        }}onClick={annexure}>Back to Annexure-II</Button>
+          <Button  variant="contained"
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px",
+          marginBottom: "10px",
+           width:"17%"
+        }}>Download front page</Button>
+          <Button  variant="contained"
+        style={{
+          marginTop: "20px",
+          marginLeft: "10px",
+          padding: "10px",
+          marginBottom: "10px",
+           width:"17%"
+        }}>Download second page</Button>
+       
           </div>
     </div>
   );

@@ -69,10 +69,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
   
     navigate("/annexureii"); // Navigate back to the form with previous data
   };
-  const handleForm16 = () => {
-  
-    navigate("/form-16"); // Navigate back to the form with previous data
-  };
+ 
   const handleDownload = async () => {
     const element = document.getElementById("page-content"); // Target the element
     try {
@@ -270,7 +267,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
       <TableContainer
         component={Paper}
         style={{
-          width: "83%",
+          width: "89%",
           margin: "0 auto",
           overflowX: "auto",
         }}
@@ -311,69 +308,69 @@ const setSums = usetotalsumStore((state) => state.setSums);
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="right" style={{ width: "0.2%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 Sno
               </TableCell>
               <TableCell
-               style={{ width: "0.2%" }}
+               sx={{width:"7%"}}
               >
                 Month
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 Basic
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 DA
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 HRA
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 IR
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
-                HMA/PP/FP
+              <TableCell align="right" sx={{width:"5%"}}>
+                HMA/PP<br/>/FP
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 CCA
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 PHA
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 Others
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 Gross
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
               {formData.salaryDeductions.pensiontype === "CPS" ? "CPS" : "GPF"}
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 APGLI
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 GIS
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 PT
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 IT Adv
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 EHF
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 EWF/SWF
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 Other Deductions
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 Total Deductions
               </TableCell>
-              <TableCell align="right" style={{ width: "0.5%" }}>
+              <TableCell align="right" sx={{width:"5%"}}>
                 Net
               </TableCell>
             </TableRow>
@@ -670,13 +667,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
       >
         Annexure-II
       </Button>
-      <Button
-        variant="contained"
-        style={{ marginTop: "20px", marginLeft: "10px", marginBottom:"10px"}}
-        onClick={handleForm16}
-      >
-        Form-16
-      </Button>
+     
       </>
       ):loading?(
         <Box
