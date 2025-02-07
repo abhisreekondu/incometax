@@ -34,29 +34,14 @@ const SalaryTable = () => {
 const setSums = usetotalsumStore((state) => state.setSums);
 
 
-  useEffect(() => {
-    const fetchSums =  async() => {
-      setLoading(true); // Start loading
-      setError(null); // Reset error before the new fetch attempt
-  
-      try {
-        const computedSums = await calculateSumsUsingAPI(rows, otherRows);
-        if (computedSums) {
-          console.log("Total sums for each column:",computedSums)
-          setSums(computedSums); // Update sums if successful
-        } else {
-          setError("Failed to fetch sums from the server."); // Set an error message if API returns null
-        }
-      } catch (error) {
-        setError("An error occurred while fetching sums."); // Handle unexpected errors
-        console.error("Error in fetchSums:", error);
-      } finally {
-        setLoading(false); // End loading
-      }
-    };
-  
-    fetchSums();
-  }, [rows, otherRows]);
+useEffect(() => {
+  const tableData = getTableData();
+  const otherData = getOtherData();
+  setRows(tableData);
+  setOtherRows(otherData);
+  setSums(tableData, otherData); 
+  setLoading(false);
+}, [salaryData, formData]);
   
 
   
@@ -133,7 +118,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
           parseInt(formData.allowances.cca || 0) +
           parseInt(formData.allowances.pha || 0) +
           parseInt(formData.allowances.otherallowance || 0) || 0,
-      pf:formData.salaryDeductions.pfamt||0,
+      pf: formData.salaryDeductions.pfamt || 0,
       cps: salaryData.cps[month] || 0,
       apgli: salaryData.apgli[month] || 0,
       gis: salaryData.gis[month] || 0,
@@ -167,7 +152,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
           parseInt(formData.salaryDeductions.ehsamt || 0) +
           parseInt(salaryData.ewfswf[month] || 0) +
           parseInt(formData.salaryDeductions.otherdeductions || 0)),
-    }))
+    }));
   };
 
   const getOtherData = () => {
@@ -189,8 +174,9 @@ const setSums = usetotalsumStore((state) => state.setSums);
         "",
       empid:
         formData.personalDetails.employeeId || "",
-    }
+    };
   };
+
 
 
 
@@ -209,25 +195,7 @@ const setSums = usetotalsumStore((state) => state.setSums);
   }, [salaryData, formData]);
   
 
-  const calculateSumsUsingAPI = async (rows, otherRows) => {
-    try {
-      const response = await fetch("http://localhost:3002/calculate-sums", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rows, otherRows }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-
-      const sums = await response.json();
-      return sums;
-    } catch (error) {
-      console.error("Error calculating sums using API:", error);
-      return null;
-    }
-  };
+ 
 
   // Render loading spinner
   if (loading) {
